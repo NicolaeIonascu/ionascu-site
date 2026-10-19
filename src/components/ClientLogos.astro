@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import { clientLogos } from '../data/testimonials';
+const H = 88; // logos are pre-cropped, transparent-background images
+// SVG logos taken from the clients' own websites (white originals are turned grey in CSS); widths keep them visually even with the rest
+const svgLogos = [
+  { name: 'Delife', file: '/logos/delife.svg', w: 180, h: 20, cls: 'lg-delife' },
+  { name: 'Bosche Wägetechnik', file: '/logos/bosche.svg', w: 140, h: 42, cls: 'lg-bosche' },
+  { name: 'Metigla', file: '/logos/metigla.svg', w: 150, h: 42, cls: 'lg-metigla' },
+];
+---
+
+<!-- Endless marquee: the list is rendered 4 times (covers wide screens) and the track slides by exactly half its width. -->
+<div class="marquee" role="group" aria-label="Companies I have worked with">
+  <div class="track">
+    {[0, 1, 2, 3].map((copy) => (
+      <ul class="set" aria-hidden={copy > 0 ? 'true' : undefined}>
+        {clientLogos.map((l) => (
+          <li>
+            <Image src={l.src} alt={copy === 0 ? l.name : ''} width={Math.round((l.src.width / l.src.height) * H)} height={H} loading="eager" decoding="async" />
+          </li>
+        ))}
+        {svgLogos.map((l) => (
+          <li><img class={l.cls} src={l.file} alt={copy === 0 ? l.name : ''} width={l.w} height={l.h} loading="eager" decoding="async" /></li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>

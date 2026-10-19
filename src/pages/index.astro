@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import whyBg from '../assets/bg/why-animation-hd2.jpg';
+import cmpManual from '../assets/compare/ikea1.jpg';
+import cmpVideo from '../assets/compare/ikea2.jpg';
+import cmpAnim from '../assets/compare/ikea3.jpg';
+import ikeaPoster from '../assets/ikea-cabinet-1280.jpg';
+import ClientLogos from '../components/ClientLogos.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import YouTube from '../components/YouTube.astro';
+import Faq from '../components/Faq.astro';
+import FeatureTiles from '../components/FeatureTiles.astro';
+import { featuredTiles } from '../data/featured';
+import { projects } from '../data/projects';
+import { services, commonFaq } from '../data/services';
+import Avatar from '../components/Avatar.astro';
+import { testimonials } from '../data/testimonials';
+
+const quotes = testimonials.slice(0, 3);
+// card titles are always two rows: break at the word that splits the title most evenly
+const twoRows = (name: string): [string, string] => {
+  const w = name.split(' ');
+  let best = 1, diff = Infinity;
+  for (let i = 1; i < w.length; i++) { const d = Math.abs(w.slice(0, i).join(' ').length - w.slice(i).join(' ').length); if (d < diff) { diff = d; best = i; } }
+  return [w.slice(0, best).join(' '), w.slice(best).join(' ')];
+};
+const homeFaq = [
+  ...commonFaq,
+  { q: 'Why use animation instead of a printed manual?', a: 'Many people cannot follow 2D drawings and long text. A short animation shows each step in motion, which reduces mistakes, support requests and returns.' },
+];
+---
+
+<Base
+  title="3D Assembly & Installation Instruction Animations | IONASCU"
+  description="Turn your assembly manual into a clear 3D animation. Step-by-step assembly and installation videos for manufacturers, from a 3D artist with 25+ years of experience."
+>
+  <section class="hero hero-full">
+    <HeroVideo />
+    <div class="wrap grid">
+      <div class="hero-spacer" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">IONASCU / 3D animation studio</p>
+        <h1><span class="big">Your manual, <em class="serif">animated.</em></span><span class="sub">3D assembly &amp; installation instruction videos</span></h1>
+        <p class="lead">Short, clear 3D animations that show every step.</p>
+        <div class="actions">
+          <a class="btn" href="/contact/">Get a quote</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">What I make</p>
+      <h2><span class="big">Every <em class="serif">step</em></span><span class="sub">Animation for every kind of product instruction</span></h2>
+      <div class="grid-3">
+        {services.map((s) => (
+          <a class="card svc" href={`/services/${s.slug}/`}>
+            <h3>{twoRows(s.name)[0]}<br />{twoRows(s.name)[1]}</h3>
+            <p class="blurb">{s.blurb ?? s.seoDescription}</p>
+            <p class="detail">{s.lead.split('. ')[0]}.</p>
+            <span class="more">Learn more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="alt sand has-bg-art" style="padding-bottom:0">
+    <div class="bg-art" aria-hidden="true">
+      <Image src={whyBg} alt="" widths={[960, 1440, 1920, 2560]} sizes="100vw" loading="lazy" decoding="async" />
+    </div>
+    <div class="wrap">
+      <p class="eyebrow">Why animation</p>
+      <h2><span class="big">18 pages <em class="serif">or</em> 1 minute</span><span class="sub">Same product, three ways to explain it. Example: IKEA HELMER cabinet.</span></h2>
+      <div class="compare">
+        <div class="card cmp"><Image class="cmp-img cmp-fit" src={cmpManual} alt="IKEA printed manual: a confused man with the instructions" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">18 pages</span><h3>Printed manual</h3><p class="muted">Many people struggle to follow it.</p></div></div>
+        <div class="card cmp"><Image class="cmp-img cmp-bw" src={cmpVideo} alt="Amateur video guide: hands fitting a caster" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">Long</span><h3>Amateur video guide</h3><p class="muted">Long and wordy, hard to follow.</p></div></div>
+        <div class="card cmp"><Image class="cmp-img" src={cmpAnim} alt="3D animation of the same caster, IKEA HELMER" widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">~1 min</span><h3>3D animation</h3><p class="muted">Short and clear, step by step.</p></div></div>
+      </div>
+      <div class="showcase" style="max-width:760px">
+        <YouTube id="lrt3ct5HByI" title="IKEA HELMER cabinet 3D assembly animation" poster={ikeaPoster} />
+      </div>
+    </div>
+    <div class="proof-band">
+      <p>Don't take my word for it: open the <a href="https://www.youtube.com/watch?v=7jgh1vatIW8" target="_blank" rel="noopener">original IKEA HELMER animation on YouTube</a> (36,000+ views) and read the comments. Viewers call it “by far the easiest to understand”.</p>
+    </div>
+  </section>
+
+  <section id="animations">
+    <div class="wrap">
+      <p class="eyebrow">Selected work</p>
+      <h2><span class="big">See it <em class="serif">move</em></span><span class="sub">Recent animations</span></h2>
+      <FeatureTiles items={featuredTiles} />
+      <p class="more-row"><a class="btn btn-ghost" href="/portfolio/">All projects →</a></p>
+    </div>
+  </section>
+
+  <section class="alt sand trusted">
+    <div class="wrap center">
+      <p class="eyebrow">Trusted by manufacturers and organisations</p>
+    </div>
+    <ClientLogos />
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2><span class="big">How it <em class="serif">works</em></span><span class="sub">A simple, approved-at-every-step process</span></h2>
+      <ol class="steps">
+        <li><h3>Send your materials</h3><p class="muted">Manual, drawings, CAD or photos.</p></li>
+        <li><h3>Script &amp; timing</h3><p class="muted">A timed script of every step.</p></li>
+        <li><h3>Rough preview</h3><p class="muted">A quick preview you can change.</p></li>
+        <li><h3>Final video</h3><p class="muted">Polished render, ready to publish.</p></li>
+      </ol>
+      <p class="more-row steps-more">For the full picture of how such films are made, read <a href="/process/" style="color:#ffb162;text-decoration:underline;text-underline-offset:.2em">How to create 3D assembly instructions →</a></p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <p class="eyebrow">Client reviews</p>
+      <h2><span class="big">In their <em class="serif">words</em></span><span class="sub">What clients say</span></h2>
+      <div class="grid-3">
+        {quotes.map((t) => (
+          <figure class="quote" style="margin:0">
+            <blockquote>“{t.text}”</blockquote>
+            <figcaption class="who" style="display:flex;align-items:center;gap:1rem;margin-top:auto">
+            <Avatar t={t} />
+            <cite>{t.name}<span>{[t.role, t.company].filter(Boolean).join(', ')}</span></cite>
+          </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="more-row"><a href="/testimonials/">Read all testimonials →</a></p>
+    </div>
+  </section>
+
+  <Faq items={homeFaq} tight />
+
+  <section class="dark cta">
+    <div class="wrap">
+      <h2><span class="big">Make it <em class="serif">clear.</em></span><span class="sub">Ready to simplify your product instructions?</span></h2>
+      <p class="lead muted">Send me your manual.</p>
+      <div class="actions"><a class="btn" href="/contact/">Get a quote</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* warm sand tint (the beige of modeus.com) instead of the cool grey for these two sections */
+  .sand { background-color: #e3ddcf; }
+  /* faint black-and-white render behind "Why animation": decoration only, fades in at the top and runs on behind the dark band at the bottom */
+  .has-bg-art { position: relative; overflow: hidden; }
+  .has-bg-art > .wrap { position: relative; z-index: 1; }
+  .bg-art { position: absolute; z-index: 0; inset: 0; opacity: .2; pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 100%); }
+  .bg-art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+  @media (max-width: 860px) { .bg-art { opacity: .16; } }
+</style>
+
+<script>
+  // the menu turns white once the page is scrolled
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const onScroll = () => header?.classList.toggle('scrolled', scrollY > 40);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

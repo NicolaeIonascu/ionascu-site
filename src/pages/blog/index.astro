@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+// Add new articles here (newest first) and create src/pages/blog/<slug>.astro
+const posts = [
+  {
+    slug: 'how-to-create-3d-assembly-instructions',
+    title: 'How to Create 3D Assembly Instructions',
+    description: 'What goes into a good 3D assembly instruction animation, what you need to provide, and how the process works.',
+    date: '2026-10-09',
+  },
+];
+---
+
+<Base
+  title="Blog: 3D Assembly & Installation Animation Guides | IONASCU"
+  description="Practical guides on 3D assembly instructions, installation animations and technical animation for manufacturers."
+>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href="/">Home</a> / Blog</p>
+    <h1>Blog</h1>
+    <p class="lead">Practical guides on assembly instructions and technical animation.</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap grid-3">
+      {posts.map((p) => (
+        <a class="card" href={`/blog/${p.slug}/`}>
+          <p class="tag">{p.date}</p>
+          <h2 style="font-size:1.25rem">{p.title}</h2>
+          <p class="muted">{p.description}</p>
+          <span class="more">Read →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

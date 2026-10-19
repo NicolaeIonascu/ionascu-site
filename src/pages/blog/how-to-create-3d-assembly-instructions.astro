@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import YouTube from '../../components/YouTube.astro';
+import { SITE } from '../../data/site';
+
+const title = 'How to Create 3D Assembly Instructions';
+const description = 'What goes into a good 3D assembly instruction animation, what you need to provide, and how the process works.';
+const date = '2026-10-09';
+const url = `${SITE.url}/blog/how-to-create-3d-assembly-instructions/`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    datePublished: date,
+    dateModified: date,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={title} description={description} type="article" jsonLd={ld}>
+  <article class="wrap page-head prose" style="padding-bottom:3rem">
+    <p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Blog</a></p>
+    <h1>{title}</h1>
+    <p class="muted">By {SITE.person} · <time datetime={date}>{date}</time></p>
+
+    <p class="lead">A good 3D assembly film shows each step in a minute or two, so nobody has to read a manual. Here is how one is made, and what you need to provide.</p>
+
+    <h2>1. Decide who will watch, then list the real sequence</h2>
+    <p>An installer needs the order of work, the tools and the fasteners. A buyer needs to see how the product works and why it is better. The same product is shown differently for each of them. Then take your current manual, drawings or an engineer's notes and list every step, every part and every tool, in the order your customers should follow.</p>
+
+    <h2>2. Gather the source files and name two people</h2>
+    <p>The best starting point is a 3D or CAD model of the product. If you only have drawings or photos, those can work too. Useful materials:</p>
+    <ul>
+      <li>The current printed or PDF assembly guide</li>
+      <li>3D/CAD files, drawings or photos of every part</li>
+      <li>A parts and fasteners list</li>
+      <li>Where the video will be used (website, YouTube, in-store screen, QR code on the box)</li>
+    </ul>
+    <p>It also helps to name two people on your side: a <strong>technical specialist</strong> who knows the product and checks the details, and a <strong>decision maker</strong> who approves the script and the final film. Sometimes this is one person. Quick answers keep the project moving.</p>
+
+    <h2>3. Write a timed script</h2>
+    <p>The process is split into short actions of about 3 to 5 seconds each. Their sum is the length of the film, and you can see which steps need detail and which can be merged or explained with a caption. Calm pacing, step numbers, arrows and part callouts keep attention on what matters.</p>
+
+    <h2>4. Approve a rough preview first</h2>
+    <p>Before the final render you get a rough animatic: the same sequence and timing, with simplified materials and lighting. You and your technical specialist check the order of steps, the position of every part, the tools and fasteners, and the pace. Changes are quick at this stage and much harder after the final render.</p>
+
+    <h2>5. Render and publish</h2>
+    <p>The final render is polished and ready for your channels. Publishing it on YouTube and your product page helps customers find it, and a QR code on the packaging puts the instructions in their hands exactly when they need them.</p>
+
+    <h2>Example</h2>
+    <p>The IKEA HELMER cabinet has an 18-page printed manual. As a 3D animation the same assembly takes about a minute:</p>
+    <YouTube id="lrt3ct5HByI" title="IKEA HELMER cabinet 3D assembly animation" />
+
+    <h2>Need an assembly animation?</h2>
+    <p>See <a href="/services/3d-assembly-instruction-animation/">3D assembly instruction animation</a> or <a href="/contact/">request a quote</a>.</p>
+  </article>
+</Base>

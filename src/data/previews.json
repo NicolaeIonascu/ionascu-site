@@ -1,0 +1,86 @@
+{
+  "aquasystem": {
+    "start": 113,
+    "duration": 8
+  },
+  "double-modular": {
+    "start": 233,
+    "duration": 8
+  },
+  "ecomodule": {
+    "start": 208,
+    "duration": 8
+  },
+  "fourseasons": {
+    "start": 265,
+    "duration": 8
+  },
+  "ikea-helmer-assembly-animation": {
+    "start": 54,
+    "duration": 8
+  },
+  "ledi": {
+    "start": 94,
+    "duration": 8
+  },
+  "marantec-wke": {
+    "start": 23,
+    "duration": 8
+  },
+  "metigla": {
+    "start": 89,
+    "duration": 8
+  },
+  "opure": {
+    "start": 90,
+    "duration": 8
+  },
+  "pvc-fence": {
+    "start": 71,
+    "duration": 8
+  },
+  "roofart": {
+    "start": 62,
+    "duration": 8
+  },
+  "roofart-opritor": {
+    "start": 53,
+    "duration": 10
+  },
+  "roofart-tdm": {
+    "start": 129,
+    "duration": 8
+  },
+  "sagiper": {
+    "start": 249,
+    "duration": 8
+  },
+  "sagiwall": {
+    "start": 179,
+    "duration": 8
+  },
+  "true-metal-supply": {
+    "start": 13,
+    "duration": 8
+  },
+  "ts-pool": {
+    "start": 5,
+    "duration": 8
+  },
+  "vodaland-border": {
+    "start": 109,
+    "duration": 8
+  },
+  "vodaland-easypave": {
+    "start": 33,
+    "duration": 8
+  },
+  "vodaland-minislot": {
+    "start": 33,
+    "duration": 8
+  },
+  "vodaland-separator": {
+    "start": 16,
+    "duration": 8
+  }
+}

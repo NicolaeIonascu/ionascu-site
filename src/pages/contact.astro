@@ -1,0 +1,49 @@
+---
+import PageBanner from '../components/PageBanner.astro';
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const formReady = !SITE.formKey.startsWith('YOUR_');
+---
+
+<Base
+  title="Contact & Quote Request | IONASCU"
+  description="Request a quote for a 3D assembly or installation animation. Send your manual, drawings or product details."
+>
+  <PageBanner video="sky" eyebrow="Hello!" crumb="Contact">
+    <h1>Get a quote</h1>
+    <p class="lead">Need help with a 3D animation or have a project in mind? Tell me about your product and attach or link your manual, drawings or files.</p>
+  </PageBanner>
+  <section>
+    <div class="wrap split" style="align-items:start">
+      {formReady ? (
+        <form class="contact" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value={SITE.formKey} />
+          <input type="hidden" name="subject" value="New quote request from ionascu.com" />
+          <input type="hidden" name="redirect" value={`${SITE.url}/thank-you/`} />
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" />
+          <label>Name<input name="name" required autocomplete="name" /></label>
+          <label>Email<input type="email" name="email" required autocomplete="email" /></label>
+          <label>Company<input name="company" autocomplete="organization" /></label>
+          <label>About your project<textarea name="message" rows="6" required placeholder="What product? How many animations? Link to your manual or files?"></textarea></label>
+          <button class="btn" type="submit">Send request</button>
+        </form>
+      ) : (
+        <div class="card">
+          <h2 style="font-size:1.2rem">Email me directly</h2>
+          <p><a href={`mailto:${SITE.email}?subject=Quote%20request`}>{SITE.email}</a></p>
+          <p class="muted" style="margin:0">The web form will be activated soon.</p>
+        </div>
+      )}
+      <div class="prose">
+        <h2 style="margin-top:0">Other ways to reach me</h2>
+        <ul>
+          <li>Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><a href={SITE.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+          <li><a href={SITE.social.youtube} rel="me noopener" target="_blank">YouTube channel</a></li>
+          <li><a href={SITE.social.fiverr} rel="me noopener" target="_blank">Fiverr profile</a></li>
+        </ul>
+        <p class="muted">Useful to include: your existing manual or PDF, 3D/CAD files if available, and where the video will be used.</p>
+      </div>
+    </div>
+  </section>
+</Base>

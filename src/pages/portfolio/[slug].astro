@@ -1,0 +1,74 @@
+---
+import Base from '../../layouts/Base.astro';
+import YouTube from '../../components/YouTube.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects, projectTitle, projectSummary, projectImage, ytThumb, type Project } from '../../data/projects';
+import { SITE } from '../../data/site';
+import { descriptions } from '../../data/descriptions';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+const { project: p } = Astro.props as { project: Project };
+const title = projectTitle(p);
+const summary = projectSummary(p);
+const note = descriptions[p.slug]; // text + product facts; the 'check' notes are for the owner and are never shown
+const url = `${SITE.url}/portfolio/${p.slug}/`;
+const related = projects.filter((x) => x.slug !== p.slug && x.category === p.category).slice(0, 3);
+const more = related.length ? related : projects.filter((x) => x.slug !== p.slug).slice(0, 3);
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Portfolio', item: SITE.url + '/portfolio/' },
+      { '@type': 'ListItem', position: 3, name: title, item: url },
+    ],
+  },
+  // TODO(owner): add VideoObject once the YouTube upload dates are known (uploadDate is required by Google).
+];
+---
+
+<Base title={title} description={summary} jsonLd={ld} image={projectImage(p).src}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href="/">Home</a> / <a href="/portfolio/">Portfolio</a> / {p.brand}</p>
+    <p class="tag">{p.category}{p.showcase ? ' · Personal showcase' : ''}</p>
+    <h1>{title}</h1>
+    <p class="lead">{summary}</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap">
+      <YouTube id={p.youtube} title={title} />
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="wrap split" style="align-items:start">
+      {note && (
+        <div class="prose">
+          <h2 style="margin-top:0">About this project</h2>
+          <p>{note.text}</p>
+          {note.product && (
+            <>
+              <h3>The product</h3>
+              <p>{note.product}</p>
+            </>
+          )}
+        </div>
+      )}
+      <div class="prose">
+        <h2 style="margin-top:0">Need something similar?</h2>
+        <p>I create assembly and installation animations from your manual, drawings or 3D files. Send me your product and I will suggest how to show it.</p>
+        <p><a class="btn" href="/contact/">Request a quote</a></p>
+        <p class="muted"><a href="/services/3d-assembly-instruction-animation/">3D assembly & installation animation</a> · <a href="/services/3d-product-animation/">3D product animation</a></p>
+      </div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <h2>More projects</h2>
+      <div class="grid-3">{more.map((x) => <ProjectCard project={x} />)}</div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,87 @@
+---
+// Short banner at the top of an inner page: poster image first (fast), a muted looping background video
+// is added after the page has loaded (skipped for reduced motion, Save-Data and slow connections).
+// Videos: public/video/banner-<name>-1600.mp4 (desktop) and banner-<name>-960.mp4 (phone).
+import { Image } from 'astro:assets';
+import mason from '../assets/banners/mason.jpg';
+import roof from '../assets/banners/roof.jpg';
+import sky from '../assets/banners/sky.jpg';
+
+interface Props {
+  video: 'mason' | 'roof' | 'sky';
+  /** small line above the title */
+  eyebrow?: string;
+  /** breadcrumb text after "Home /" */
+  crumb?: string;
+}
+const { video, eyebrow, crumb } = Astro.props;
+const posters = { mason, roof, sky };
+---
+
+<section class="banner" data-banner>
+  <div class="banner-media" aria-hidden="true">
+    <Image src={posters[video]} alt="" widths={[640, 960, 1280, 1600]} sizes="100vw" format="webp" quality={72} loading="eager" fetchpriority="high" class="banner-poster" />
+    <video class="banner-video" muted loop playsinline preload="none" tabindex="-1" data-lg={`/video/banner-${video}-1600.mp4`} data-sm={`/video/banner-${video}-960.mp4`}></video>
+  </div>
+  <div class="banner-shade" aria-hidden="true"></div>
+  <div class="wrap banner-copy">
+    {crumb && <p class="banner-crumbs"><a href="/">Home</a> / {crumb}</p>}
+    {eyebrow && <p class="banner-eyebrow">{eyebrow}</p>}
+    <slot />
+  </div>
+  <button type="button" class="banner-toggle" aria-label="Pause background video" hidden><span class="p"></span></button>
+</section>
+
+<style>
+  .banner { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; min-height: clamp(300px, 44vh, 420px); padding: clamp(3rem, 7vw, 5rem) 0; background: #1b2632; color: #fff; text-align: center; }
+  .banner-media, .banner-shade { position: absolute; inset: 0; }
+  .banner-media { z-index: 0; }
+  .banner-media :global(.banner-poster), .banner-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .banner-video { opacity: 0; transition: opacity .8s ease; }
+  .banner-video.on { opacity: 1; }
+  .banner-shade { z-index: 1; background: linear-gradient(180deg, rgb(27 38 50 / .38), rgb(27 38 50 / .5)); }
+  .banner-copy { position: relative; z-index: 2; }
+  .banner-copy :global(h1) { color: #fff; margin: 0; font-size: clamp(2.4rem, 6.5vw, 4.75rem); }
+  .banner-copy :global(.lead) { color: rgb(255 255 255 / .88); margin: 1.25rem auto 0; max-width: 40rem; }
+  .banner-copy :global(.sub) { color: rgb(255 255 255 / .88); }
+  .banner-crumbs { margin: 0 0 1.25rem; font-size: .85rem; color: rgb(255 255 255 / .75); }
+  .banner-crumbs a { color: inherit; text-decoration: none; }
+  .banner-crumbs a:hover { text-decoration: underline; }
+  .banner-eyebrow { margin: 0 0 1rem; text-transform: uppercase; letter-spacing: .18em; font-size: .8rem; font-weight: 700; color: rgb(255 255 255 / .85); }
+  .banner-toggle { position: absolute; right: 1rem; bottom: 1rem; z-index: 3; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgb(255 255 255 / .5); background: rgb(27 38 50 / .55); cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .banner-toggle[hidden] { display: none; }
+  .banner-toggle .p { width: 11px; height: 13px; border-left: 4px solid #fff; border-right: 4px solid #fff; }
+  .banner-toggle.paused .p { width: 0; height: 0; border: 0; border-left: 12px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 3px; }
+</style>
+
+<script>
+  const conn = (navigator as any).connection;
+  const slow = conn && (conn.saveData || /(^|-)2g$|3g/.test(conn.effectiveType || ''));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-banner]').forEach((banner) => {
+    const video = banner.querySelector<HTMLVideoElement>('.banner-video')!;
+    const toggle = banner.querySelector<HTMLButtonElement>('.banner-toggle')!;
+    let userPaused = false;
+
+    const start = () => {
+      video.src = matchMedia('(max-width: 700px)').matches ? video.dataset.sm! : video.dataset.lg!;
+      video.addEventListener('playing', () => { video.classList.add('on'); toggle.hidden = false; }, { once: true });
+      video.play().catch(() => {});
+      // pause while the banner is out of view
+      new IntersectionObserver(([e]) => { if (userPaused) return; e.isIntersecting ? video.play().catch(() => {}) : video.pause(); }).observe(banner);
+    };
+
+    if (!slow && !reduce) {
+      const go = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 800));
+      document.readyState === 'complete' ? go() : addEventListener('load', go, { once: true });
+    }
+
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      userPaused ? video.pause() : video.play();
+      toggle.classList.toggle('paused', userPaused);
+      toggle.setAttribute('aria-label', userPaused ? 'Play background video' : 'Pause background video');
+    });
+  });
+</script>

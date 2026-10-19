@@ -1,0 +1,109 @@
+---
+import PageBanner from '../components/PageBanner.astro';
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ClientLogos from '../components/ClientLogos.astro';
+import Avatar from '../components/Avatar.astro';
+import { testimonials, testimonialLetter } from '../data/testimonials';
+
+// Optimised files for the letter viewer: a small thumbnail for the card and a large image for the viewer.
+const cards = await Promise.all(
+  testimonials.map(async (t) => {
+    const src = testimonialLetter(t);
+    if (!src || !t.letter) return { t, letter: null };
+    const [thumb, full] = await Promise.all([
+      getImage({ src, width: 96, format: 'webp' }),
+      getImage({ src, width: Math.min(src.width, 1400), format: 'webp', quality: 85 }),
+    ]);
+    return { t, letter: { title: t.letter.title, thumb: thumb.src, full: full.src, w: full.attributes.width, h: full.attributes.height } };
+  })
+);
+
+// Short testimonials go first and share one row; longer ones follow, similar lengths side by side.
+// This keeps the row heights low (a grid row is as tall as its tallest card).
+const SHORT = 140;
+const ordered = [...cards].sort((a, b) => a.t.text.length - b.t.text.length);
+---
+
+<Base
+  title="Client Testimonials | IONASCU"
+  description="What manufacturers and organisations say about working with Nicolae Ionascu on 3D assembly and installation animations, with original recommendation letters."
+>
+  <PageBanner video="mason" eyebrow="What clients say" crumb="Testimonials">
+    <h1>What clients say</h1>
+    <p class="lead">Feedback from companies and organisations I have worked with. Where a client wrote a recommendation letter, you can open the original.</p>
+  </PageBanner>
+  <section>
+    <div class="wrap grid-3">
+      {ordered.map(({ t, letter }) => (
+        <figure class={`quote${t.text.length < SHORT ? ' compact' : ''}`} style="margin:0">
+          <blockquote>“{t.text}”</blockquote>
+          {letter && (
+            <a class="letter-btn" href={letter.full} data-letter={letter.full} data-title={letter.title} target="_blank" rel="noopener">
+              <img src={letter.thumb} alt="" width="40" height="56" loading="lazy" />
+              <span><strong>Read the original letter</strong><em>{letter.title}</em></span>
+            </a>
+          )}
+          <figcaption class="who" style="display:flex;align-items:center;gap:1rem;margin-top:auto">
+            <Avatar t={t} />
+            <cite>{t.name}<span>{[t.role, t.company].filter(Boolean).join(', ')}</span></cite>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap center">
+      <h2>Companies I have worked with</h2>
+    </div>
+    <ClientLogos />
+  </section>
+
+  <!-- letter viewer -->
+  <dialog id="letter-viewer" aria-label="Recommendation letter">
+    <div class="bar">
+      <p class="cap" id="letter-title"></p>
+      <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+    </div>
+    <div class="body" id="letter-body"><img id="letter-img" alt="" /></div>
+  </dialog>
+</Base>
+
+<style is:global>
+  .quote.compact { padding: 1.25rem 1.5rem; gap: 1rem; }
+  .quote.compact blockquote { line-height: 1.55; }
+  .letter-btn { display: flex; align-items: center; gap: 1rem; padding: .75rem 1rem; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+  .letter-btn:hover { border-color: var(--accent); box-shadow: 0 6px 18px rgb(27 38 50 / .08); }
+  .letter-btn img { width: 40px; height: 56px; object-fit: cover; object-position: top; border: 1px solid var(--line); border-radius: 3px; background: var(--card); flex: none; }
+  .letter-btn strong { display: block; font-size: .95rem; color: var(--accent); }
+  .letter-btn em { display: block; font-style: normal; font-size: .82rem; color: var(--muted); line-height: 1.35; }
+
+  #letter-viewer { border: 0; padding: 0; border-radius: 14px; max-width: min(92vw, 880px); width: 100%; background: var(--card); color: var(--ink); }
+  #letter-viewer[open] { display: flex; flex-direction: column; max-height: 92vh; overflow: hidden; }
+  #letter-viewer::backdrop { background: rgb(27 38 50 / .72); }
+  #letter-viewer .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem .75rem .75rem 1.25rem; border-bottom: 1px solid var(--line); flex: none; }
+  #letter-viewer .cap { margin: 0; font-weight: 600; }
+  #letter-viewer .close { width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 0; background: var(--ink); color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer; flex: none; }
+  #letter-viewer .body { overflow: auto; flex: 1; }
+  #letter-viewer img { display: block; width: 100%; height: auto; }
+</style>
+
+<script>
+  // Progressive enhancement: without JavaScript the button simply opens the image in a new tab.
+  const dlg = document.getElementById('letter-viewer') as HTMLDialogElement | null;
+  if (dlg && typeof dlg.showModal === 'function') {
+    const img = document.getElementById('letter-img') as HTMLImageElement;
+    const cap = document.getElementById('letter-title')!;
+    document.querySelectorAll<HTMLAnchorElement>('[data-letter]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        img.src = a.dataset.letter!;
+        img.alt = a.dataset.title ?? 'Recommendation letter';
+        cap.textContent = a.dataset.title ?? '';
+        dlg.showModal();
+        document.getElementById('letter-body')!.scrollTop = 0;
+      })
+    );
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // click on the dark area closes it
+  }
+</script>

@@ -1,0 +1,22 @@
+---
+// Round portrait of a testimonial author; initials on a tinted circle when there is no photo.
+import { Image } from 'astro:assets';
+import type { Testimonial } from '../data/testimonials';
+import { testimonialPhoto } from '../data/testimonials';
+
+interface Props { t: Testimonial; size?: number; }
+const { t, size = 56 } = Astro.props;
+const photo = testimonialPhoto(t);
+const initials = t.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
+---
+
+{photo ? (
+  <Image class="avatar" src={photo} alt={t.name} width={size} height={size} widths={[size, size * 2]} sizes={`${size}px`} loading="lazy" />
+) : (
+  <span class="avatar avatar-initials" aria-hidden="true">{initials}</span>
+)}
+
+<style define:vars={{ size: `${size}px` }}>
+  .avatar { width: var(--size); height: var(--size); border-radius: 50%; object-fit: cover; flex: none; background: #ddd6c8; border: 1px solid rgb(0 0 0 / .06); }
+  .avatar-initials { display: grid; place-items: center; font-family: var(--font-head); font-size: calc(var(--size) * .36); letter-spacing: .06em; color: var(--accent); background: #ebd9cb; }
+</style>

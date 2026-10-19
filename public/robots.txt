@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ionascu.com/sitemap-index.xml

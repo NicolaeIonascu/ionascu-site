@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import { services } from '../../data/services';
+---
+
+<Base
+  title="3D Animation Services for Assembly & Installation | IONASCU"
+  description="3D assembly and installation instruction animation, 3D product animation and explainer videos, and interactive 3D product instructions for manufacturers."
+>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href="/">Home</a> / Services</p>
+    <h1>Services</h1>
+    <p class="lead">Everything I make helps your customers assemble or install your product correctly the first time.</p>
+  </div>
+  <section>
+    <div class="wrap grid-3">
+      {services.map((s) => (
+        <a class="card" href={`/services/${s.slug}/`}>
+          <h2 style="font-size:1.25rem">{s.name}</h2>
+          <p class="muted">{s.seoDescription}</p>
+          <span class="more">Learn more →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

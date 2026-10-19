@@ -1,0 +1,167 @@
+---
+// Three large tiles. On hover the tile widens to 16:9 and a muted, control-less YouTube preview starts
+// (from a chosen second) – the effect used on porsche.com, but with YouTube as the video source.
+import { Image } from 'astro:assets';
+import { projects, projectImage, projectTitle } from '../data/projects';
+import { clipFor } from '../data/clips';
+
+interface Item { slug: string; start?: number; duration?: number; source?: 'youtube' | 'file'; }
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+
+const tiles = items.map((it) => {
+  const p = projects.find((x) => x.slug === it.slug)!;
+  const start = it.start ?? 0, duration = it.duration ?? 8;
+  return { p, start: 0, duration, file: clipFor(it.slug, start, duration) }; // the clip is cut from the YouTube video and starts at 0
+});
+---
+
+<div class="tiles" data-tiles>
+  {tiles.map(({ p, start, duration, file }, i) => (
+    <a class="tile" href={`/portfolio/${p.slug}/`} data-file={file} data-start={start} data-duration={duration} aria-label={`${projectTitle(p)}: open project`}>
+      <Image src={projectImage(p)} alt="" widths={[480, 720, 960, 1280]} sizes="(max-width: 860px) 100vw, 45vw" format="webp" loading={i === 0 ? 'eager' : 'lazy'} class="tile-img" />
+      <div class="tile-video" aria-hidden="true"><div class="yt-slot"></div></div>
+      <div class="tile-shade" aria-hidden="true"></div>
+      <div class="tile-info">
+        <span class="tag">{p.category}</span>
+        <span class="tile-title">{p.brand}{p.product ? ` ${p.product}` : ''}</span>
+        <span class="tile-cta">Open project →</span>
+      </div>
+    </a>
+  ))}
+</div>
+
+<script>
+  declare global { interface Window { YT?: any; onYouTubeIframeAPIReady?: () => void } }
+
+  const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = (navigator as any).connection?.saveData;
+
+  // Make the hovered tile end exactly at 16:9: with flex-basis 0 and flex-grow r on one tile and 1 on the other two,
+  // width = r/(r+n-1) of the free space, so r = (n-1)B/(S-B) for the target width B.
+  document.querySelectorAll<HTMLElement>('.tiles').forEach((tilesEl) => {
+    const setRatio = () => {
+      const cs = getComputedStyle(tilesEl);
+      const gap = parseFloat(cs.columnGap) || 0;
+      const n = tilesEl.children.length;
+      const space = tilesEl.clientWidth - gap * (n - 1);
+      // tile height as the stylesheet intends it (same clamp as --h)
+      const wantH = Math.min(420, Math.max(320, innerWidth * 0.3));
+      const target = Math.min((wantH * 16) / 9, space * 0.7); // width of the expanded tile
+      const h = (target * 9) / 16;                              // height that makes it exactly 16:9
+      tilesEl.style.setProperty('--h', h.toFixed(1) + 'px');
+      tilesEl.style.setProperty('--bw', target.toFixed(1) + 'px');
+      if (space > 0 && target < space) tilesEl.style.setProperty('--r', (((n - 1) * target) / (space - target)).toFixed(3));
+    };
+    setRatio();
+    new ResizeObserver(setRatio).observe(tilesEl);
+  });
+
+  if (canHover && !reduce && !saveData) {
+    // The YouTube player script is fetched only when the first tile is hovered.
+    let api: Promise<void> | null = null;
+    const loadApi = () => (api ??= new Promise<void>((resolve) => {
+      if (window.YT?.Player) return resolve();
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { prev?.(); resolve(); };
+      const s = document.createElement('script');
+      s.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(s);
+    }));
+
+    document.querySelectorAll<HTMLAnchorElement>('.tile[data-file]').forEach((tile) => {
+      const id = tile.dataset.yt!;
+      const start = Number(tile.dataset.start || 0);
+      const duration = Number(tile.dataset.duration || 8);
+      const box = tile.querySelector<HTMLElement>('.tile-video')!;
+      let player: any = null;
+      let ready = false;
+      let wanted = false;
+      let span = duration; // looped seconds; shortened if the video ends before start + duration
+      let loopTimer: number | undefined;
+      let showTimer: number | undefined;
+      let killTimer: number | undefined;
+
+      // The player is never paused (YouTube would draw a pause icon): it is created on hover and destroyed after the tile fades out.
+      const destroy = () => {
+        clearInterval(loopTimer);
+        try { player?.destroy(); } catch {}
+        player = null; ready = false;
+        box.innerHTML = '<div class="yt-slot"></div>';
+      };
+
+      const file = tile.dataset.file;
+      let vid: HTMLVideoElement | null = null;
+
+      const enterFile = () => {
+        wanted = true;
+        clearTimeout(killTimer);
+        if (!vid) {
+          vid = document.createElement('video');
+          vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = 'auto';
+          vid.className = 'file-video';
+          vid.src = file!;
+          vid.addEventListener('loadedmetadata', () => { vid!.currentTime = start; });
+          vid.addEventListener('timeupdate', () => { if (vid && vid.currentTime >= start + duration) vid.currentTime = start; });
+          vid.addEventListener('playing', () => { clearTimeout(showTimer); showTimer = window.setTimeout(() => wanted && tile.classList.add('playing'), 150); });
+          box.replaceChildren(vid);
+        }
+        vid.play().catch(() => {});
+      };
+
+      const enter = async () => {
+        if (file) return enterFile();
+        wanted = true;
+        clearTimeout(killTimer);
+        await loadApi();
+        if (!wanted) return;
+        if (player && ready) { // re-entered quickly: it is still running
+          clearTimeout(showTimer);
+          showTimer = window.setTimeout(() => tile.classList.add('playing'), 150);
+          return;
+        }
+        if (player) return;
+        player = new window.YT.Player(box.querySelector('.yt-slot'), {
+          host: 'https://www.youtube-nocookie.com',
+          videoId: id,
+          playerVars: { autoplay: 1, mute: 1, cc_load_policy: 0, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, rel: 0, playsinline: 1, start, origin: location.origin },
+          events: {
+            onReady: () => {
+              ready = true;
+              player.mute();
+              try { player.unloadModule('captions'); player.unloadModule('cc'); } catch {}
+              const total = player.getDuration?.() || 0;
+              if (total) span = Math.max(2, Math.min(duration, total - start - 1));
+              player.playVideo();
+              loopTimer = window.setInterval(() => {
+                if (player?.getCurrentTime && player.getCurrentTime() >= start + span) player.seekTo(start, true);
+              }, 250);
+            },
+            onStateChange: (e: any) => {
+              if (e.data === 1 && wanted) { clearTimeout(showTimer); showTimer = window.setTimeout(() => tile.classList.add('playing'), 1000); }
+              if (e.data === 0 && wanted) player.seekTo(start, true);
+              if (e.data === 2 && wanted) player.playVideo(); // never sit paused (YouTube shows its 'more videos' box on pause)
+            },
+          },
+        });
+      };
+
+      const leave = () => {
+        wanted = false;
+        clearTimeout(showTimer);
+        tile.classList.remove('playing');           // fade the video out first
+        clearTimeout(killTimer);
+        killTimer = window.setTimeout(() => {
+          if (file) { vid?.pause(); vid?.remove(); vid = null; return; }
+          destroy();
+        }, 700); // then remove the player
+      };
+
+      tile.addEventListener('pointerenter', (e) => { if ((e as PointerEvent).pointerType === 'mouse') enter(); });
+      tile.addEventListener('pointerleave', leave);
+      tile.addEventListener('focus', enter);
+      tile.addEventListener('blur', leave);
+    });
+  }
+</script>

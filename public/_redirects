@@ -1,0 +1,54 @@
+# 301 redirects from the old WordPress URLs to the new site.
+# Works as-is on Cloudflare Pages and Netlify. Keeps the link equity the old pages already earned.
+# TODO(owner): several old items share a client name (3x Vodaland, 3x Roofart); mapping below is a best guess.
+
+# Main pages
+/about-me/                /about/                                            301
+/journal/                 /testimonials/                                     301
+/sample-page-2/           /services/interactive-3d-product-instructions/     301
+/attila/                  /services/3d-assembly-instruction-animation/           301
+/portfolio-5-masonry/     /portfolio/                                        301
+/video-portfolio/         /portfolio/                                        301
+
+# Old theme demo pages (duplicates) -> portfolio / blog
+/portfolio-2-columns/         /portfolio/   301
+/portfolio-packery/           /portfolio/   301
+/portoflio-3-masonry/         /portfolio/   301
+/portoflio-6-columns/         /portfolio/   301
+/portfolio-revealer/          /portfolio/   301
+/portfolio-revealer-content/  /portfolio/   301
+/portfolio-slider-carousel/   /portfolio/   301
+/portfolio-slider-vegas/      /portfolio/   301
+/portfolio-slider-autoplay/   /portfolio/   301
+/portfolio-pointy-slider/     /portfolio/   301
+/portfolio-tilter/            /portfolio/   301
+/portfolio-tilter-real-ratio/ /portfolio/   301
+/slider-content/              /             301
+/blog-chess-style/            /blog/        301
+/blog-simple/                 /blog/        301
+/blog-standard/               /blog/        301
+
+# Old portfolio items -> new project pages
+/portfolio-item/ikea/            /portfolio/ikea-helmer-assembly-animation/  301
+/portfolio-item/nothing-to-do/   /portfolio/cambridge-skylights/             301
+/portfolio-item/metigla/         /portfolio/metigla/                         301
+/portfolio-item/marantec-wke/    /portfolio/marantec-wke/                    301
+/portfolio-item/marantec/        /portfolio/marantec/                        301
+/portfolio-item/yeah-i-do/       /portfolio/ledi/                            301
+/portfolio-item/ts-pool/         /portfolio/ts-pool/                         301
+/portfolio-item/few-fires/       /portfolio/true-metal-supply/               301
+/portfolio-item/vodaland/        /portfolio/vodaland-border/                 301
+/portfolio-item/doomsday/        /portfolio/vodaland-separator/              301
+/portfolio-item/only-person/     /portfolio/vodaland-minislot/               301
+/portfolio-item/i-can/           /portfolio/vodaland-easypave/               301
+/portfolio-item/metal-tile/      /portfolio/roofart/                         301
+/portfolio-item/we-woke-up/      /portfolio/roofart-tdm/                     301
+/portfolio-item/universe/        /portfolio/roofart-opritor/                 301
+/portfolio-item/testimony/       /portfolio/sagiwall/                        301
+/portfolio-item/anyone-who/      /portfolio/aquasystem/                      301
+/portfolio-item/know-that/       /portfolio/sagiper/                         301
+/portfolio-item/love-for-you/    /portfolio/fourseasons/                     301
+/portfolio-item/opure/           /portfolio/opure/                           301
+/portfolio-item/we-need/         /portfolio/double-modular/                  301
+/portfolio-item/it-caused/       /portfolio/pvc-fence/                       301
+/portfolio-item/ecomodule/       /portfolio/ecomodule/                       301

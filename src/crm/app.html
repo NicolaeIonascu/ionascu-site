@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>CRM · IONASCU</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root { --bg:#0e1522; --panel:#162033; --side:#0a101b; --line:#27354f; --ink:#e8eef8; --muted:#8fa0bd; --accent:#4c9bf0; --ok:#3ecf8e; --warn:#f2b84b; --bad:#ef6a6a; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, 'Segoe UI', Roboto, sans-serif; }
+  select, input, textarea, button { font: inherit; color: var(--ink); background: #0b1220; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+  button { cursor: pointer; } button:hover:not(:disabled) { border-color: var(--accent); } button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .muted { color: var(--muted); } code { background: #0b1220; padding: 1px 6px; border-radius: 5px; }
+  a { color: var(--accent); }
+
+  /* ---------- shell ---------- */
+  .shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+  .side { background: var(--side); border-right: 1px solid var(--line); padding: 18px 14px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 6px; }
+  .brand { font-weight: 700; letter-spacing: .12em; font-size: 15px; padding: 4px 10px 16px; }
+  .brand span { color: var(--accent); }
+  .nav { display: grid; gap: 4px; }
+  .nav a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 9px; color: var(--ink); text-decoration: none; }
+  .nav a:hover { background: #121c2e; }
+  .nav a.on { background: #16315a; box-shadow: inset 3px 0 0 var(--accent); }
+  .nav .tag { margin-left: auto; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: #1f3b66; color: #9cc8fb; }
+  .nav .ic { width: 18px; text-align: center; opacity: .85; }
+  .side .foot { margin-top: auto; font-size: 12px; }
+  .content { min-width: 0; }
+  .top { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 20; }
+  .top h1 { margin: 0; font-size: 17px; }
+  .top .sp { margin-left: auto; }
+  .page { padding: 22px 24px 40px; }
+  #view-site { padding: 0; }
+  .sitebar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 24px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .sitebar button.on { background: #16315a; border-color: var(--accent); }
+  #siteWrap { height: calc(100vh - 107px); overflow: auto; background: #0b1220; display: flex; justify-content: center; align-items: flex-start; }
+  #siteWrap.dev { padding: 18px 0; }
+  #siteFrame { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+  #siteWrap.dev #siteFrame { height: calc(100vh - 107px - 36px); border-radius: 22px; border: 8px solid #1d2a44; box-shadow: 0 10px 40px rgb(0 0 0 / .5); }
+  .devsw { display: inline-flex; gap: 0; margin-left: auto; }
+  .devsw button { border-radius: 0; }
+  .devsw button:first-child { border-radius: 8px 0 0 8px; } .devsw button:last-child { border-radius: 0 8px 8px 0; }
+  .devsw button.on { background: #16315a; border-color: var(--accent); }
+
+  /* ---------- overview ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .card h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .tile { display: grid; gap: 8px; }
+  .tile img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; background: #000; }
+  .tile .nm { font-weight: 600; }
+  .pos { background: var(--accent); color: #fff; font-weight: 700; border-radius: 6px; padding: 1px 8px; margin-right: 6px; }
+
+  /* ---------- select video fragment ---------- */
+  .vs { display: grid; grid-template-columns: minmax(0, 1fr) 430px; gap: 20px; align-items: start; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; margin-bottom: 12px; }
+  .crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .cell { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; border: 2px solid transparent; }
+  .cell .slot, .cell iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+  .cell .hit { position: absolute; inset: 0; cursor: zoom-in; z-index: 2; }
+  .cell:hover { border-color: var(--accent); }
+  .cell .t { position: absolute; left: 6px; top: 6px; z-index: 3; background: rgb(0 0 0 / .72); padding: 2px 8px; border-radius: 6px; font-weight: 600; pointer-events: none; font-size: 12px; }
+  .cell .bar { position: absolute; left: 6px; right: 6px; bottom: 6px; z-index: 4; display: flex; gap: 6px; justify-content: space-between; }
+  .cell .bar button { padding: 3px 9px; font-size: 12px; background: rgb(0 0 0 / .72); }
+  .cell .bar .use { background: var(--ok); border-color: var(--ok); color: #04210f; font-weight: 700; }
+  .vs aside { position: sticky; top: 76px; display: grid; gap: 14px; max-height: calc(100vh - 92px); overflow: auto; }
+  #viewer { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; }
+  #viewer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .big { font-size: 26px; font-weight: 700; color: var(--ok); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .side .nav { overflow-y: auto; min-height: 0; flex: 1 1 auto; align-content: start; }
+  .subnav { margin: 2px 0 8px 8px; padding-left: 8px; border-left: 1px solid var(--line); }
+  .subhead { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 6px 6px; }
+  .vlist { display: grid; gap: 2px; }
+  .vrow { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 4px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+  .vrow:hover { background: #121c2e; }
+  .vrow.on { background: #16315a; border-color: var(--accent); }
+  .vrow img { width: 44px; height: 25px; object-fit: cover; border-radius: 4px; background: #000; flex: none; }
+  .vrow .nm { flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.25; }
+  .vrow .st { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--muted); border: 1px solid var(--line); }
+  .vrow.done .st { background: var(--ok); border-color: var(--ok); color: #04210f; }
+  .item { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; background: #0f192b; }
+  .item.home { border-color: #2c5b92; }
+  .item .head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .item .num { background: var(--accent); color: #fff; font-weight: 700; border-radius: 6px; padding: 1px 8px; }
+  .item .num.spare { background: #3a465e; }
+  .item .name { font-weight: 600; flex: 1; }
+  .item input[type=number] { width: 70px; padding: 4px 6px; }
+  .item select { padding: 4px 6px; }
+  .item .acts { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .item .acts button { padding: 3px 9px; font-size: 12px; }
+  .badge { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .badge.home { color: #7fb8f5; border-color: #2c5b92; }
+  .dirty { padding: 8px 10px; border-radius: 8px; background: #3a2f12; border: 1px solid #6b5518; color: var(--warn); }
+  .dirty.clean { background: #11291f; border-color: #1f5a41; color: var(--ok); }
+  textarea { width: 100%; height: 130px; font: 12px/1.5 ui-monospace, Consolas, monospace; resize: vertical; }
+  @media (max-width: 1100px) { .vs { grid-template-columns: 1fr; } .vs aside { position: static; max-height: none; } }
+  @media (max-width: 760px) { .shell { grid-template-columns: 1fr; } .side { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; } .brand { padding: 4px 10px; } .side .foot { display: none; } }
+  /* ---------- login gate ---------- */
+  html:not(.authed) body > *:not(#login) { display: none !important; }
+  html.authed #login { display: none; }
+  #login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+  #login form { width: min(100%, 340px); background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 26px; display: grid; gap: 12px; }
+  #login h1 { margin: 0 0 4px; font-size: 17px; letter-spacing: .12em; }
+  #login label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  #login .err { color: var(--bad); font-size: 13px; min-height: 1.2em; }
+</style>
+</head>
+<body>
+<div id="login">
+  <form autocomplete="off">
+    <h1>CRM · IONASCU</h1>
+    <label>Login<input name="u" type="text" autocomplete="username" required></label>
+    <label>Password<input name="p" type="password" autocomplete="current-password" required></label>
+    <div class="err" role="alert"></div>
+    <button class="primary" type="submit">Sign in</button>
+  </form>
+</div>
+<script>
+  // Login gate. NOTE: browser-side check only (it hides the interface, it does not protect the data).
+  // Real protection = a password on the web server for /crm/. Credential: SHA-256 of "login:password".
+  (function () {
+    var OK = 'bac1bc821037abd4cf065a2e2b3f0c524e12c47ef4c8218c69fa9a71bcbe44ba';
+    var root = document.documentElement;
+    try { if (sessionStorage.getItem('crm-auth') === OK) root.classList.add('authed'); } catch (e) {}
+    async function sha(s) { var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join(''); }
+    document.querySelector('#login form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var f = e.target, h = await sha(f.u.value.trim() + ':' + f.p.value);
+      if (h === OK) { try { sessionStorage.setItem('crm-auth', OK); } catch (x) {} root.classList.add('authed'); f.p.value = ''; }
+      else { f.querySelector('.err').textContent = 'Wrong login or password'; }
+    });
+  })();
+</script>
+<div class="shell">
+
+  <!-- ================= left menu ================= -->
+  <nav class="side">
+    <div class="brand">IONASCU <span>· CRM</span></div>
+    <div class="nav" id="nav">
+      <a href="#dashboard" data-view="dashboard"><span class="ic">▦</span> Overview</a>
+      <a href="#vs" data-view="vs"><span class="ic">▶</span> Select video fragment <span class="tag">VS</span></a>
+      <div id="vsSub" class="subnav" hidden>
+        <div class="subhead">All videos <span id="vcount"></span></div>
+        <div class="vlist" id="vlist"></div>
+      </div>
+      <a href="#site" data-view="site"><span class="ic">↗</span> View the site</a>
+    </div>
+    <div class="foot muted"><a href="/">← Back to the site</a><br>Private page, not linked anywhere.</div>
+  </nav>
+
+  <div class="content">
+    <div class="top">
+      <h1 id="title">Overview</h1>
+      <span id="vsTools" hidden class="row">
+        <label hidden>Video: <select id="project"></select></label>
+        <span id="durInfo" class="muted"></span>
+      </span>
+      <span class="sp muted" id="liveInfo"></span>
+    </div>
+
+    <!-- ================= Overview ================= -->
+    <section class="page" id="view-dashboard">
+      <div class="card" style="margin-bottom:14px">
+        <h2>Home page video tiles (live on the site)</h2>
+        <div class="cards" id="dashTiles"></div>
+        <p class="muted" style="margin:12px 0 0">These are the tiles currently shown on the home page. Change them in <b>Select video fragment</b>.</p>
+      </div>
+      <div class="card">
+        <h2>How saving works</h2>
+        <p style="margin:0 0 6px">Pick a fragment in <b>Select video fragment</b> and press <b>Use it on the site</b>, then refresh the home page. (This works on the local dev server only.)</p>
+        <p class="muted" style="margin:0">On the hosted site use Copy settings instead.</p>
+      </div>
+    </section>
+
+    <!-- ================= the site in a frame ================= -->
+    <section class="page" id="view-site" hidden>
+      <div class="sitebar">
+        <button data-go="/#animations">Home tiles</button>
+        <button data-go="/portfolio/">Portfolio</button>
+        <button id="siteReload">⟲ Reload</button>
+        <span class="devsw" id="devsw"><button data-dev="desktop" class="on">🖥 Desktop</button><button data-dev="tablet">Tablet 768</button><button data-dev="phone">📱 Phone 390</button></span>
+        <span class="muted">Same site, shown here so the menu stays on the left. Press Reload after saving.</span>
+      </div>
+      <div id="siteWrap"><iframe id="siteFrame" title="Site preview"></iframe></div>
+    </section>
+
+    <!-- ================= Select video fragment ================= -->
+    <section class="page" id="view-vs" hidden>
+      <div class="vs">
+        <div>
+          <div class="toolbar">
+            <label>Fragment length <input id="lenIn" type="number" min="3" max="30" value="8" style="width:64px"> s</label>
+            <span class="muted">Every frame plays only its own fragment and loops. Press <b>⟲ Restart</b> to watch one from its start.</span>
+          </div>
+          <div class="crumbs" id="crumbs"></div>
+          <div class="grid" id="grid"></div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h2>Your choice</h2>
+            <div id="viewer"><div id="vslot"></div></div>
+            <div class="row" style="margin-top:10px">
+              <span>Start: <span class="big" id="startOut">–</span> s</span>
+              <button id="minus">−1 s</button><button id="plus">+1 s</button>
+              <button id="restartView">⟲ Restart</button>
+            </div>
+            <div class="row" style="margin-top:8px"><button class="primary" id="addprev" disabled>Use as portfolio card preview</button><button id="add" disabled>Use as home tile</button></div>
+            <div class="muted" id="prevInfo" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card">
+            <h2>Portfolio card preview <span class="muted" style="text-transform:none;letter-spacing:0">(this video, played when the mouse is over its card)</span></h2>
+            <div id="prevList"></div>
+          </div>
+
+          <div class="card">
+            <h2>Home page tiles <span class="muted" style="text-transform:none;letter-spacing:0">(first three are shown on the site)</span></h2>
+            <div id="items"></div>
+            <div id="dirty" class="dirty"></div>
+          </div>
+
+          <div class="card">
+            <h2>Save / load</h2>
+            <div class="row">
+              <button class="primary" id="putlive">Use it on the site</button>
+              <button id="copy">Copy settings</button>
+              <button id="download">Download featured.json</button>
+              <button id="reset">Reset to the live site</button>
+              <span id="copied" class="muted"></span>
+            </div>
+            <p class="muted" style="margin:10px 0 6px">“Use it on the site” saves your choice straight into the site; then just refresh the home page. You can also paste settings here and press Load.</p>
+            <textarea id="out"></textarea>
+            <div class="row" style="margin-top:8px"><button id="load">Load pasted settings</button></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const fmt = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+  const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, v); } catch {} } };
+
+  let PROJECTS = [], live = [], items = [], previews = {}, cur = null, dur = 0, range = [0, 0], stack = [], startSec = null;
+  const KNOWN_DUR = { pEefFVWs0Ls: 261, 'd-UUjJY0BCw': 160, lrt3ct5HByI: 105 };
+  const N = 12;
+  const lenVal = () => Math.max(3, Math.min(30, +$('#lenIn').value || 8));
+  const proj = (slug) => PROJECTS.find((p) => p.slug === slug);
+  let yt = null, ytReady = false, cellPlayers = [], viewTimer = null, apiRequested = false;
+
+  /* ================= routing (left menu) ================= */
+  document.querySelectorAll('.sitebar [data-go]').forEach((b) => b.addEventListener('click', () => { $('#siteFrame').dataset.url = b.dataset.go; show('site'); }));
+  $('#siteReload').addEventListener('click', () => show('site'));
+  // device preview: the frame gets the real width of a phone / tablet, so the site's own mobile layout shows up
+  const DEV = { desktop: 0, tablet: 768, phone: 390 };
+  function setDevice(name) {
+    const w = DEV[name] || 0, fr = $('#siteFrame'), wrap = $('#siteWrap');
+    fr.style.width = w ? (w + 16) + 'px' : '100%'; // + the 8 px frame on each side
+    wrap.classList.toggle('dev', !!w);
+    document.querySelectorAll('#devsw [data-dev]').forEach((b) => b.classList.toggle('on', b.dataset.dev === name));
+    try { localStorage.setItem('crm_device', name); } catch {}
+  }
+  document.querySelectorAll('#devsw [data-dev]').forEach((b) => b.addEventListener('click', () => setDevice(b.dataset.dev)));
+  try { setDevice(localStorage.getItem('crm_device') || 'desktop'); } catch { setDevice('desktop'); }
+  const TITLES = { dashboard: 'Overview', vs: 'Select video fragment', site: 'View the site' };
+  function show(view) {
+    if (!TITLES[view]) view = 'dashboard';
+    document.querySelectorAll('[id^=view-]').forEach((el) => (el.hidden = el.id !== 'view-' + view));
+    document.querySelectorAll('#nav a').forEach((a) => a.classList.toggle('on', a.dataset.view === view));
+    $('#title').textContent = TITLES[view];
+    $('#vsTools').hidden = view !== 'vs';
+    $('#vsSub').hidden = view !== 'vs';
+    document.title = `${TITLES[view]} · CRM · IONASCU`;
+    if (view === 'site') {
+      const fr = $('#siteFrame'); // always shows the latest saved state
+      if (!fr.dataset.url) fr.dataset.url = '/#animations';
+      const u = new URL(fr.dataset.url, location.origin); u.searchParams.set('_', Date.now()); fr.src = u.pathname + u.search + u.hash;
+      document.querySelectorAll('.sitebar [data-go]').forEach((b) => b.classList.toggle('on', b.dataset.go === fr.dataset.url));
+    }
+    if (view === 'vs') { requestApi(); if (ytReady && cur) openVideo(); }
+    else { destroyCells(); clearInterval(viewTimer); }
+  }
+  addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+  /* ================= data ================= */
+  async function init() {
+    try { PROJECTS = await (await fetch('/data/projects.json', { cache: 'no-store' })).json(); } catch { PROJECTS = []; }
+    try { live = await (await fetch('/data/featured.json', { cache: 'no-store' })).json(); } catch { live = []; }
+    try { previews = await (await fetch('/data/previews.json', { cache: 'no-store' })).json(); } catch { previews = {}; }
+    // the browser keeps a copy of every saved set; entries missing from the file (e.g. it was overwritten) come back
+    let restored = false;
+    try { const b = JSON.parse(ls.get('crm_previews', '{}')); for (const k of Object.keys(b)) if (!previews[k]) { previews[k] = b[k]; restored = true; } } catch {}
+    // a draft kept in this browser is used only if it was started from the site as it is now (otherwise it is stale and would overwrite newer settings)
+    try { items = ls.get('crm_base', '') === JSON.stringify(live) ? JSON.parse(ls.get('crm_items', '')) || live.map((x) => ({ ...x })) : live.map((x) => ({ ...x })); } catch { items = live.map((x) => ({ ...x })); }
+    for (const p of PROJECTS) { const o = document.createElement('option'); o.value = p.slug; o.textContent = p.name; $('#project').appendChild(o); }
+    cur = PROJECTS[0];
+    $('#project').addEventListener('change', () => { cur = proj($('#project').value); startSec = items.find((i) => i.slug === cur.slug)?.start ?? null; openVideo(); });
+    renderDash(); renderItems(); renderPrevs();
+    if (restored) savePreviews('restored ' + Object.keys(previews).length + ' card previews ✓');
+    show(location.hash.slice(1));
+  }
+
+  function renderDash() {
+    const box = $('#dashTiles'); box.innerHTML = '';
+    live.slice(0, 6).forEach((it, i) => {
+      const p = proj(it.slug); if (!p) return;
+      const el = document.createElement('div'); el.className = 'card tile';
+      el.innerHTML = `<img src="https://i.ytimg.com/vi/${p.id}/mqdefault.jpg" alt=""><div><span class="pos">${i + 1}</span><span class="nm">${p.name}</span></div>
+        <div class="muted">from ${fmt(it.start)} · ${it.duration}s loop · YouTube</div>
+        <div class="row"><a href="#vs" data-edit="${p.slug}">Edit in “Select video fragment” →</a><button data-rm>✕ Remove</button></div>`;
+      el.querySelector('[data-rm]').addEventListener('click', () => removeTile(p.slug));
+      el.querySelector('[data-edit]').addEventListener('click', () => { cur = p; setTimeout(() => { $('#project').value = p.slug; openVideo(true); }, 80); });
+      box.appendChild(el);
+    });
+    $('#liveInfo').textContent = `${live.length} fragment(s) configured on the site`;
+  }
+
+  /* ================= YouTube API ================= */
+  function requestApi() {
+    if (apiRequested) return; apiRequested = true;
+    window.onYouTubeIframeAPIReady = () => {
+      yt = new YT.Player('vslot', { host: 'https://www.youtube-nocookie.com', videoId: cur.id, playerVars: { controls: 1, mute: 1, rel: 0, modestbranding: 1, playsinline: 1, cc_load_policy: 0 }, events: { onReady: () => { ytReady = true; openVideo(); } } });
+    };
+    const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(s);
+  }
+
+  /* ================= video + grid ================= */
+  function openVideo(zoomToSaved) {
+    if (!cur) return;
+    $('#project').value = cur.slug;
+    const saved = items.find((i) => i.slug === cur.slug) || (previews[cur.slug] && { slug: cur.slug, ...previews[cur.slug] });
+    if (saved) { startSec = saved.start; $('#lenIn').value = saved.duration; }
+    dur = KNOWN_DUR[cur.id] || 0;
+    $('#durInfo').textContent = dur ? `length ${fmt(dur)} (${dur} s)` : 'reading length…';
+    if (ytReady) yt.cueVideoById(cur.id);
+    const begin = () => { range = (saved && zoomToSaved) ? [Math.max(0, saved.start - 40), Math.min(dur, saved.start + 40)] : [0, dur]; stack = []; buildGrid(); updateStart(); if (saved && zoomToSaved) preview(); };
+    if (dur) return begin();
+    let tries = 0;
+    const ask = setInterval(() => {
+      const d = ytReady && yt.getDuration ? Math.floor(yt.getDuration()) : 0;
+      if (d > 0) { clearInterval(ask); dur = d; $('#durInfo').textContent = `length ${fmt(d)} (${d} s)`; begin(); }
+      else if (++tries > 25) { clearInterval(ask); $('#durInfo').textContent = 'could not read the length'; }
+      if (ytReady && tries === 1) { yt.mute(); yt.playVideo(); }
+    }, 400);
+  }
+
+  function destroyCells() { cellPlayers.forEach((p) => { try { p.player?.destroy(); } catch {} }); cellPlayers = []; }
+
+  function buildGrid() {
+    if (!window.YT || !YT.Player) { setTimeout(buildGrid, 300); return; }
+    destroyCells();
+    const [a, b] = range, grid = $('#grid'), len = lenVal();
+    grid.innerHTML = '';
+    for (let i = 0; i < N; i++) {
+      const t = Math.max(0, Math.min(dur - len - 1, Math.round(a + (i + 0.5) * (b - a) / N)));
+      const cell = document.createElement('div'); cell.className = 'cell';
+      cell.innerHTML = `<div class="slot"></div><div class="hit" title="Zoom in here"></div><span class="t">${fmt(t)} – ${fmt(t + len)}</span>
+        <div class="bar"><button class="rs" title="Play this fragment again from its beginning">⟲ Restart</button><button class="use">Use ${t}s</button></div>`;
+      grid.appendChild(cell);
+      const rec = { t, player: null, ready: false };
+      rec.player = new YT.Player(cell.querySelector('.slot'), {
+        host: 'https://www.youtube-nocookie.com', videoId: cur.id,
+        playerVars: { autoplay: 1, mute: 1, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1, rel: 0, playsinline: 1, cc_load_policy: 0, start: t, end: t + len, origin: location.origin },
+        events: {
+          onReady: () => { rec.ready = true; rec.player.mute(); },
+          onStateChange: (e) => { if (e.data === 0) { rec.player.seekTo(t, true); rec.player.playVideo(); } }, // end of the fragment -> loop
+        },
+      });
+      cellPlayers.push(rec);
+      cell.querySelector('.hit').addEventListener('click', () => zoomTo(t));
+      cell.querySelector('.rs').addEventListener('click', (e) => { e.stopPropagation(); if (rec.ready) { rec.player.seekTo(t, true); rec.player.playVideo(); } });
+      cell.querySelector('.use').addEventListener('click', (e) => { e.stopPropagation(); choose(t); previews[cur.slug] = { start: Math.round(t), duration: lenVal() }; savePreviews('fragment saved ✓'); });
+    }
+    const step = (b - a) / N;
+    $('#crumbs').innerHTML = `<span class="muted">Showing ${fmt(a)} – ${fmt(b)}  ·  a frame every ${step < 10 ? step.toFixed(1) : Math.round(step)} s</span>`;
+    const back = document.createElement('button'); back.textContent = '← zoom out'; back.disabled = !stack.length; back.onclick = () => { range = stack.pop(); buildGrid(); };
+    const whole = document.createElement('button'); whole.textContent = 'whole video'; whole.onclick = () => { range = [0, dur]; stack = []; buildGrid(); };
+    const all = document.createElement('button'); all.textContent = '⟲ Restart all'; all.onclick = () => cellPlayers.forEach((r) => { if (r.ready) { r.player.seekTo(r.t, true); r.player.playVideo(); } });
+    $('#crumbs').prepend(back, whole, all);
+  }
+
+  function zoomTo(t) {
+    const [a, b] = range, w = (b - a) / 3;
+    if (w < 6) return choose(t);
+    stack.push(range);
+    range = [Math.max(0, Math.round(t - w / 2)), Math.min(dur, Math.round(t + w / 2))];
+    buildGrid();
+  }
+  $('#lenIn').addEventListener('change', () => { buildGrid(); preview(); });
+
+  /* ================= choice + preview ================= */
+  function choose(t) { startSec = Math.max(0, Math.min(dur - 3, Math.round(t))); updateStart(); preview(); }
+  function updateStart() { $('#startOut').textContent = startSec === null ? '–' : startSec; $('#add').disabled = startSec === null; $('#addprev').disabled = startSec === null; renderPrevs(); }
+  function preview(srcId, s0, len) {
+    const id = srcId || cur?.id, from = s0 ?? startSec, l = len || lenVal();
+    if (!ytReady || from === null || from === undefined) return;
+    clearInterval(viewTimer);
+    yt.mute(); yt.loadVideoById({ videoId: id, startSeconds: from });
+    viewTimer = setInterval(() => { try { if (yt.getCurrentTime() >= from + l || yt.getPlayerState() === 0) yt.seekTo(from, true); } catch {} }, 300);
+  }
+  $('#minus').onclick = () => { if (startSec !== null) { startSec = Math.max(0, startSec - 1); updateStart(); preview(); } };
+  $('#plus').onclick = () => { if (startSec !== null) { startSec = Math.min(dur - 3, startSec + 1); updateStart(); preview(); } };
+  $('#restartView').onclick = () => preview();
+
+  $('#add').onclick = () => {
+    const entry = { slug: cur.slug, start: startSec, duration: lenVal() };
+    const i = items.findIndex((x) => x.slug === cur.slug);
+    if (i >= 0) { if (items[i].source) entry.source = items[i].source; items[i] = entry; } else items.push(entry);
+    persist(); renderItems();
+  };
+
+  /* ================= local clips (cut from YouTube on this computer) ================= */
+  let clipRunning = false, clipDirty = false;
+  function buildClips() {
+    clipDirty = true;
+    if (clipRunning) return;
+    clipRunning = true;
+    (async () => {
+      const m = $('#copied');
+      while (clipDirty) {
+        clipDirty = false;
+        const seen = new Set(), list = [];
+        const add = (slug, v) => { const p = proj(slug); if (!p || !v) return; const c = { slug, id: p.id, start: Math.round(v.start), duration: Math.round(v.duration || 8) }; const k = slug + '-' + c.start + '-' + c.duration; if (!seen.has(k)) { seen.add(k); list.push(c); } };
+        live.forEach((it) => add(it.slug, it));
+        Object.keys(previews).forEach((slug) => add(slug, previews[slug]));
+        m.textContent = 'making video clips… (about 10 s each, keep this page open)';
+        try {
+          const r = await (await fetch('/api/make-clips', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(list) })).json();
+          m.textContent = r.ok ? 'clips ready ✓ refresh the site' : 'could not make a clip for: ' + (r.failed || []).join(', ');
+        } catch { m.textContent = 'could not make the clips (is the dev server running?)'; }
+      }
+      clipRunning = false;
+      setTimeout(() => { if (!clipRunning) m.textContent = ''; }, 8000);
+    })();
+  }
+
+  /* ================= portfolio card previews (saved straight away) ================= */
+  async function savePreviews(msg) {
+    const m = $('#copied');
+    ls.set('crm_previews', JSON.stringify(previews));
+    try {
+      const r = await fetch('/api/save-previews', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(previews) });
+      if (!r.ok) throw new Error();
+      m.textContent = msg || 'saved ✓ refresh the portfolio page';
+      buildClips();
+    } catch { m.textContent = 'works only on the local dev server'; }
+    setTimeout(() => (m.textContent = ''), 4000);
+    renderPrevs();
+  }
+  function renderVideoList() {
+    const box = $('#vlist'); if (!box) return;
+    box.innerHTML = '';
+    let n = 0;
+    for (const p of PROJECTS) {
+      const home = live.find((x) => x.slug === p.slug), card = previews[p.slug];
+      const done = !!(home || card); if (done) n++;
+      const parts = [];
+      if (home) parts.push('home tile from ' + fmt(home.start));
+      if (card) parts.push('card preview from ' + fmt(card.start));
+      const row = document.createElement('div');
+      row.className = 'vrow' + (done ? ' done' : '') + (cur && cur.slug === p.slug ? ' on' : '');
+      row.innerHTML = '<img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + p.id + '/mqdefault.jpg"><div class="nm">' + p.name + '</div>' +
+        '<div class="st" title="' + (done ? 'Chosen: ' + parts.join(' · ') : 'Not chosen yet') + '">' + (done ? '✓' : '') + '</div>';
+      row.title = done ? 'Chosen: ' + parts.join(' · ') : 'Not chosen yet';
+      row.onclick = () => { cur = p; startSec = null; $('#project').value = p.slug; openVideo(true); window.scrollTo({ top: 0, behavior: 'smooth' }); renderVideoList(); };
+      box.appendChild(row);
+    }
+    $('#vcount').textContent = '(' + n + ' of ' + PROJECTS.length + ' chosen)';
+  }
+  function renderPrevs() {
+    renderVideoList();
+    const box = $('#prevList'); box.innerHTML = '';
+    const keys = cur && previews[cur.slug] ? [cur.slug] : []; // only the video that is open now
+    $('#prevInfo').textContent = cur && previews[cur.slug] ? 'This project: preview from ' + fmt(previews[cur.slug].start) + ', ' + previews[cur.slug].duration + ' s loop.' : (cur ? 'This project has no hover preview yet.' : '');
+    if (!keys.length) { box.innerHTML = '<div class="muted">No card preview for this video yet. Press a green “Use …s” button under a frame.</div>'; return; }
+    keys.forEach((slug) => {
+      const p = proj(slug), v = previews[slug];
+      const el = document.createElement('div'); el.className = 'item';
+      el.innerHTML = '<div class="head"><span class="name">' + (p ? p.name : slug) + '</span></div>' +
+        '<div class="row">from <input type="number" min="0" value="' + v.start + '" data-f="start"> s · loop <input type="number" min="3" max="30" value="' + v.duration + '" data-f="duration"> s</div>' +
+        '<div class="acts"><button data-a="prev">▶ Preview</button><button data-a="pick">Re-pick…</button><button data-a="del">✕ Remove</button></div>';
+      el.querySelectorAll('input').forEach((inp) => inp.addEventListener('change', () => { v[inp.dataset.f] = Math.max(inp.dataset.f === 'duration' ? 3 : 0, +inp.value || 0); savePreviews(); }));
+      el.querySelector('[data-a=prev]').onclick = () => { if (p) { cur = p; $('#project').value = p.slug; preview(p.id, v.start, v.duration); startSec = v.start; updateStart(); } };
+      el.querySelector('[data-a=pick]').onclick = () => { if (p) { cur = p; $('#project').value = p.slug; openVideo(true); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+      el.querySelector('[data-a=del]').onclick = () => { delete previews[slug]; savePreviews('removed ✓'); };
+      box.appendChild(el);
+    });
+  }
+  $('#addprev').onclick = () => { if (!cur || startSec === null) return; previews[cur.slug] = { start: startSec, duration: lenVal() }; savePreviews(); };
+
+  /* ================= the list ================= */
+  function persist() { ls.set('crm_items', JSON.stringify(items)); ls.set('crm_base', JSON.stringify(live)); $('#out').value = JSON.stringify(items, null, 2); }
+  function renderItems() {
+    const box = $('#items'); box.innerHTML = '';
+    if (!items.length) box.innerHTML = '<p class="muted">The list is empty. Choose a fragment and press “Add”.</p>';
+    items.forEach((it, i) => {
+      const p = proj(it.slug), home = i < 6;
+      const el = document.createElement('div'); el.className = 'item' + (home ? ' home' : '');
+      el.innerHTML = `<div class="head"><span class="num ${home ? '' : 'spare'}">${i + 1}</span><span class="name">${p ? p.name : it.slug}</span><span class="badge ${home ? 'home' : ''}">${home ? 'on home page' : 'spare'}</span></div>
+        <div class="row">from <input type="number" min="0" value="${it.start}" data-f="start"> s · loop <input type="number" min="3" max="30" value="${it.duration}" data-f="duration"> s</div>
+        <div class="acts"><button data-a="prev">▶ Preview</button><button data-a="pick">Re-pick…</button><button data-a="up" ${i === 0 ? 'disabled' : ''}>↑</button><button data-a="down" ${i === items.length - 1 ? 'disabled' : ''}>↓</button><button data-a="del">✕ Remove</button></div>`;
+      el.querySelectorAll('input,select').forEach((inp) => inp.addEventListener('change', () => {
+        const f = inp.dataset.f; if (f === 'source') { inp.value === 'file' ? (it.source = 'file') : delete it.source; } else it[f] = Math.max(0, +inp.value || 0);
+        persist(); updateDirty();
+      }));
+      el.querySelector('[data-a=prev]').onclick = () => { if (p) { cur = p; $('#project').value = p.slug; preview(p.id, it.start, it.duration); startSec = it.start; updateStart(); } };
+      el.querySelector('[data-a=pick]').onclick = () => { if (p) { cur = p; $('#project').value = p.slug; openVideo(true); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+      el.querySelector('[data-a=up]').onclick = () => { [items[i - 1], items[i]] = [items[i], items[i - 1]]; persist(); renderItems(); };
+      el.querySelector('[data-a=down]').onclick = () => { [items[i + 1], items[i]] = [items[i], items[i + 1]]; persist(); renderItems(); };
+      el.querySelector('[data-a=del]').onclick = () => removeTile(it.slug);
+      box.appendChild(el);
+    });
+    persist(); updateDirty();
+  }
+  function updateDirty() {
+    const same = JSON.stringify(items) === JSON.stringify(live);
+    const d = $('#dirty'); d.className = 'dirty' + (same ? ' clean' : '');
+    d.textContent = same ? '✓ Same as the live site.' : 'Changed. Not on the site yet: press “Use it on the site”.';
+  }
+
+  /* ================= save / load ================= */
+  async function saveLive(msg) {
+    const m = $('#copied');
+    try {
+      const r = await fetch('/api/save-featured', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(items) });
+      if (!r.ok) throw new Error();
+      live = items.map((x) => ({ ...x })); persist(); updateDirty(); renderDash(); renderVideoList();
+      m.textContent = msg || 'saved ✓ refresh the home page';
+      buildClips();
+    } catch { m.textContent = 'works only on the local dev server — use Copy settings instead'; }
+    setTimeout(() => (m.textContent = ''), 5000);
+  }
+  $('#putlive').onclick = () => {
+    if (cur && startSec !== null && (!previews[cur.slug] || previews[cur.slug].start !== startSec)) { previews[cur.slug] = { start: startSec, duration: lenVal() }; savePreviews('fragment saved ✓'); }
+    saveLive();
+  };
+  // removing a video from the home page: no confirm() dialog (some embedded browsers block it), saved to the site straight away
+  function removeTile(slug) {
+    const i = items.findIndex((x) => x.slug === slug);
+    if (i < 0) return;
+    items.splice(i, 1); persist(); renderItems();
+    saveLive('removed ✓ and saved to the site');
+  }
+  $('#copy').onclick = async () => { const text = JSON.stringify(items, null, 2); try { await navigator.clipboard.writeText(text); } catch { $('#out').select(); document.execCommand('copy'); } $('#copied').textContent = 'copied ✓'; setTimeout(() => ($('#copied').textContent = ''), 2500); };
+  $('#download').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' })); a.download = 'featured.json'; a.click(); };
+  $('#reset').onclick = () => { if (confirm('Discard your changes and go back to what is live on the site?')) { items = live.map((x) => ({ ...x })); persist(); renderItems(); } };
+  $('#load').onclick = () => { try { const v = JSON.parse($('#out').value); if (!Array.isArray(v)) throw 0; items = v; persist(); renderItems(); $('#copied').textContent = 'loaded ✓'; } catch { $('#copied').textContent = 'that is not valid settings text'; } setTimeout(() => ($('#copied').textContent = ''), 2500); };
+
+  init();
+})();
+</script>
+</body>
+</html>

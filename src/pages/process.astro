@@ -1,0 +1,164 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+
+// English draft translated from the owner's article "Как создаётся технический 3D-фильм".
+// TODO(owner): review wording.
+const title = 'How a Technical 3D Film Is Made';
+const description = 'From synopsis and script to animation, RAW animatic, approval and final render: how a technical 3D instruction film is produced, step by step.';
+const date = '2026-10-09';
+const url = `${SITE.url}/process/`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'How a Technical 3D Film Is Made: From Idea to Final Video',
+    description,
+    datePublished: date,
+    dateModified: date,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={title} description={description} jsonLd={ld} type="article">
+  <div class="wrap page-head">
+    <p class="crumbs"><a href="/">Home</a> / Process</p>
+    <p class="eyebrow">Our process</p>
+    <h1><span class="big">Process<em class="serif">.</em></span><span class="sub">How a technical 3D film is made: from idea to final video</span></h1>
+    <p class="lead">Clients often tell me they have wanted a training film about their product for a long time, but did not know where to start: whom to ask, how to describe the task, and how to explain their vision so that the result is predictable and genuinely useful. This is the process, step by step.</p>
+  </div>
+
+  <section class="after-head process-intro">
+    <div class="wrap prose narrow">
+      <p>Making a technical 3D film starts long before the first animation appears in the 3D scene. An assembly film, an operating manual, a demonstration of industrial equipment or a technical product presentation must do more than look good. Above all it must convey information correctly and clearly.</p>
+      <p>The whole production can be divided into three main stages: <strong>pre-production</strong>, <strong>production</strong> and <strong>post-production</strong>. Whether you take part as the client or as the contractor, this overview should help you avoid many typical mistakes.</p>
+    </div>
+  </section>
+
+  <section class="process-stages">
+    <div class="wrap">
+      <!-- 1 -->
+      <div class="stage">
+        <div class="stage-label"><span class="no">01</span><span class="name">Pre-production</span></div>
+        <div class="stage-body prose">
+          <h2>Preparation</h2>
+
+          <h3>Synopsis</h3>
+          <p>The first step is to define what film is needed and what task it must solve. The client provides a short description of the future film. It helps to state:</p>
+          <ul>
+            <li>The title of the film.</li>
+            <li>Who it is for: installers, engineers, sales staff, end customers or another audience.</li>
+            <li>What exactly must be shown.</li>
+            <li>What the viewer should have learned after watching.</li>
+            <li>The preferred visual style, and examples of similar films if there are any.</li>
+          </ul>
+          <p>The target audience matters most. The same product can be presented in completely different ways depending on who will watch. An installer needs the order of installation, the tools, the fasteners and the technical details. A buyer cares more about the benefits and how the product works.</p>
+
+          <h3>People responsible</h3>
+          <p>For efficient work it is best to name two kinds of responsible people on the client side:</p>
+          <ul>
+            <li><strong>A technical specialist</strong>: an engineer or another employee who knows the product well, explains technical details, answers questions and checks that the processes shown are correct.</li>
+            <li><strong>A decision maker</strong>: a representative authorised to approve the script, the interim results and the final film.</li>
+          </ul>
+          <p>Sometimes one person fills both roles. This speeds up production considerably, because many questions need a quick answer. The faster the contractor gets clarifications, the fewer delays there are.</p>
+
+          <h3>Gathering materials</h3>
+          <p>Next, technical information about the product is collected. Depending on the project this can be:</p>
+          <ul>
+            <li>CAD models and assembly drawings.</li>
+            <li>Technical documentation.</li>
+            <li>Photos and video material.</li>
+            <li>Installation and operating instructions.</li>
+            <li>Diagrams, dimensions and specifications.</li>
+            <li>Information about materials, colours and surface features.</li>
+          </ul>
+          <p>The more complete the source information, the deeper the contractor can study the product and the less likely changes become later. You do not need every item: missing information can often be reconstructed from photos and drawings, or clarified with the technical specialist.</p>
+
+          <h3>A simplified script</h3>
+          <p>After studying the materials, the script is developed. The technical process is divided into a sequence of short actions, each describing what happens on screen. One action usually lasts about 3–5 seconds, though it can be shorter or longer depending on complexity. For an installation film the sequence might look like this:</p>
+          <ol>
+            <li>Show the overall view of the structure.</li>
+            <li>Install the first mounting profile.</li>
+            <li>Show how it is fastened.</li>
+            <li>Install the next element.</li>
+            <li>Show the correct connection of the parts.</li>
+          </ol>
+          <p>Each action gets an estimated duration, and the sum gives the length of the future film. At this stage it also becomes clear which actions must be shown in detail and which can be merged, shortened or explained with text. This keeps the film as short as possible without losing any important technical information. Once the script is approved, production can begin.</p>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="stage">
+        <div class="stage-label"><span class="no">02</span><span class="name">Production</span></div>
+        <div class="stage-body prose">
+          <h2>Building the scene and animating</h2>
+
+          <h3>Preparing and assembling the 3D scene</h3>
+          <p>Here the technical information becomes a full three-dimensional scene. If the client provides CAD models, they are imported into the 3D animation software and optimised where necessary.</p>
+          <p>CAD models usually contain only the product itself. A film may also need other objects: tools, fasteners, building structures, surroundings and more. It does not always make sense to model every object from scratch: many standard 3D models can be bought from specialised libraries, which saves production time. Models that do not exist are created separately.</p>
+          <p>Once all objects are ready, the 3D scene is assembled and the materials, lighting and cameras are set up. Camera positions are chosen not only for looks: the main goal is the clearest possible demonstration of the technical process.</p>
+
+          <h3>Animation</h3>
+          <p>When the scene is ready, animation begins. Following the script, the movements of parts, tools, mechanisms and cameras are created. In an installation film, for example, it is not enough for a part simply to appear in the right place: the film must show the process of installing it, including the direction of movement, the correct position, the way it is fastened and how it interacts with the other elements.</p>
+          <div class="callout">
+            <p>Accuracy is especially important in technical animation. Even a beautiful film loses its value if it explains the installation or operation incorrectly, so every action must be technically justified and clear to the viewer.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="stage">
+        <div class="stage-label"><span class="no">03</span><span class="name">Post-production</span></div>
+        <div class="stage-body prose">
+          <h2>Review, approval and final render</h2>
+
+          <h3>RAW animatic and rough cut</h3>
+          <p>After the animation is created, a preliminary version of the film is prepared: the RAW animatic. The image is not yet at final quality, and materials, lighting and effects may be simplified, because the aim is to check the content, not the looks. The separate animated episodes are assembled into one sequence. Where needed, the following are added:</p>
+          <ul>
+            <li>Explanatory captions and graphic elements.</li>
+            <li>Voice-over.</li>
+            <li>Music.</li>
+            <li>Sound effects.</li>
+          </ul>
+          <p>The client can watch the future film almost in its final order and length, without the time cost of high-quality rendering.</p>
+
+          <h3>Review, corrections and approval</h3>
+          <p>This is one of the most important stages. Together with the technical specialist, the client checks:</p>
+          <ul>
+            <li>That the sequence of actions is correct.</li>
+            <li>The accuracy of the position and interaction of the parts.</li>
+            <li>That the tools and fasteners shown are the right ones.</li>
+            <li>That the technical information is complete.</li>
+            <li>That the explanations are clear.</li>
+            <li>The pace and duration of individual episodes.</li>
+          </ul>
+          <p>If mistakes are found or new wishes arise, the changes are made now. Correcting an animation before the final render is much easier and faster than after it, so it is very important to approve the RAW version before moving on to the final visualisation.</p>
+
+          <h3>Final render and edit</h3>
+          <p>After the RAW animatic is approved, the final render begins. The scenes are rendered at the agreed resolution and quality, with final materials, lighting and effects. The preliminary images in the prepared edit are then replaced with the final frames. Titles, graphics, voice-over, music and sound effects are checked, and after a last review the film is exported in the required formats and delivered to the client.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap prose narrow">
+      <h2>Why this process matters</h2>
+      <p>Splitting production into consecutive stages lets the client keep control of the result throughout the project. Every stage has a clear goal and ends with an approval before the next one starts. This avoids the situation where serious technical errors are discovered only after the expensive final render, and it makes the project more predictable and the cooperation between client and contractor far more effective.</p>
+      <div class="callout">
+        <p><strong>A good technical 3D film does not start with a beautiful picture. It starts with correctly organised information.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dark cta">
+    <div class="wrap">
+      <h2>Have a product to explain?</h2>
+      <p class="lead muted">Send me your manual or drawings and I will propose a script and a timeline.</p>
+      <div class="actions"><a class="btn" href="/contact/">Get a quote</a></div>
+    </div>
+  </section>
+</Base>

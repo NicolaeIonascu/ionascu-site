@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import YouTube from '../components/YouTube.astro';
+import photo from '../assets/people/nicolae.jpg';
+import { SITE } from '../data/site';
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE.url}/#person`,
+  name: SITE.person,
+  jobTitle: '3D Artist',
+  url: `${SITE.url}/about/`,
+  worksFor: { '@id': `${SITE.url}/#organization` },
+  sameAs: Object.values(SITE.social),
+};
+---
+
+<Base
+  title="About Nicolae Ionascu | 3D Artist"
+  description="Nicolae Ionascu: 3D artist, cameraman, craft school instructor and designer with 25+ years of experience, creating instructional animations."
+  jsonLd={[person]}
+>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href="/">Home</a> / About</p>
+    <h1>About Nicolae Ionascu</h1>
+    <p class="lead">3D artist, cameraman, craft school instructor, designer.</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap split" style="align-items:start">
+      <Image src={photo} alt="Nicolae Ionascu, 3D artist" widths={[400, 800]} sizes="(max-width: 860px) 100vw, 480px" style="border-radius:var(--radius)" />
+      <div class="prose">
+        <p>I am happy because I do what I love. It is satisfying to see my educational videos help people grasp construction technologies quickly. I see this in the comments on my YouTube videos and in the feedback from clients on Fiverr. I am grateful to clients from different countries for their trust.</p>
+        <p>What I do is simple to explain: I transform your text-based assembly guides into short, clear and engaging animations. This is far more effective for understanding technical information.</p>
+        <p><em>“A single glance is worth a hundred explanations.”</em></p>
+        <p>With over 25 years of experience in the CG industry I have worked for manufacturers as well as international organisations. <a href="/testimonials/">Read what clients say</a>.</p>
+        <p><a class="btn" href="/contact/">Work with me</a></p>
+      </div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <h2>A case in point: IKEA HELMER cabinet</h2>
+      <p class="lead">A personal showcase comparing three ways to explain the same assembly.</p>
+      <div class="compare">
+        <div class="card"><h3>IKEA manual</h3><p class="muted">Well made and a standard, yet many people who are not good at visualising space struggle to follow the 18-page guide.</p></div>
+        <div class="card"><h3>Video guide</h3><p class="muted">Someone filming the assembly without videography expertise tends to produce long, verbose videos.</p></div>
+        <div class="card"><h3>3D animation</h3><p class="muted">The animated instructions run slightly over one minute and stay clear and consistent throughout.</p></div>
+      </div>
+      <div class="showcase" style="max-width:720px"><YouTube id="lrt3ct5HByI" title="IKEA HELMER cabinet 3D assembly animation" /></div>
+    </div>
+  </section>
+</Base>

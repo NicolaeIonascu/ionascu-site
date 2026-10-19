@@ -1,0 +1,41 @@
+---
+import PageBanner from '../../components/PageBanner.astro';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects, categories } from '../../data/projects';
+
+const used = categories.filter((c) => projects.some((p) => p.category === c));
+---
+
+<Base
+  title="Portfolio: 3D Assembly & Installation Animations | IONASCU"
+  description="Portfolio of 3D assembly and installation instruction animations for furniture, roofing, drainage, siding, lighting and yard products."
+>
+  <PageBanner video="roof" eyebrow="Selected work" crumb="Portfolio">
+    <h1>Portfolio</h1>
+    <p class="lead">Assembly and installation animations for manufacturers. Pick a project to watch the video.</p>
+  </PageBanner>
+  <section>
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="Filter by category">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        {used.map((c) => <button type="button" data-filter={c} aria-pressed="false">{c}</button>)}
+      </div>
+      <div class="grid-3" id="grid">
+        {projects.map((p, i) => <ProjectCard project={p} loading={i < 6 ? 'eager' : 'lazy'} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Progressive enhancement: without JS every project is simply visible.
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('#grid [data-cat]');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      cards.forEach((c) => (c.hidden = b.dataset.filter !== 'all' && c.dataset.cat !== b.dataset.filter));
+    })
+  );
+</script>
