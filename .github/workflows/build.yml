@@ -1,9 +1,14 @@
-# Checks on every push that the site still builds. Deployment itself is done by the host.
-name: build
+name: build and deploy
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ionascu-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,7 +16,44 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Deploy to VPS
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.VPS_DEPLOY_ENABLED == 'true'
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/ionascu
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/ionascu ~/.ssh/known_hosts
+          trap 'rm -f ~/.ssh/ionascu' EXIT
+          export RSYNC_RSH="ssh -i $HOME/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
+          target="ionascu-deploy@176.58.98.83"
+          release="/var/www/ionascu-static/releases/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA}"
+          ssh -i ~/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$target" "mkdir -p '$release'"
+          rsync -rlz --chmod=D755,F644 dist/ "$target:$release/"
+          ssh -i ~/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$target" bash -s -- "$release" <<'REMOTE'
+          set -euo pipefail
+          release="$1"
+          cd /var/www/ionascu-static
+          exec 9>.deploy.lock
+          flock 9
+          test -s "$release/index.html"
+          test -s "$release/404.html"
+          previous="$(readlink current)"
+          ln -s "$release" current.next
+          mv -Tf current.next current
+          if ! curl --fail --silent --show-error --resolve ionascu.com:443:127.0.0.1 https://ionascu.com/ -o "$release/.health-check" ||
+             ! cmp "$release/index.html" "$release/.health-check"; then
+            ln -s "$previous" current.rollback
+            mv -Tf current.rollback current
+            exit 1
+          fi
+          rm "$release/.health-check"
+          REMOTE
