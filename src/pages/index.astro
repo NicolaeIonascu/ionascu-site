@@ -5,7 +5,7 @@ import whyBg from '../assets/bg/why-animation-hd2.jpg';
 import cmpManual from '../assets/compare/ikea1.jpg';
 import cmpVideo from '../assets/compare/ikea2.jpg';
 import cmpAnim from '../assets/compare/ikea3.jpg';
-import ikeaPoster from '../assets/ikea-cabinet-1280.jpg';
+import ikeaPoster from '../assets/ikea-cabinet-blue-1280.jpg';
 import ClientLogos from '../components/ClientLogos.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import YouTube from '../components/YouTube.astro';
@@ -17,7 +17,9 @@ import { services, commonFaq } from '../data/services';
 import Avatar from '../components/Avatar.astro';
 import { testimonials } from '../data/testimonials';
 
-const quotes = testimonials.slice(0, 3);
+// shown on the home page, in this order (names as in data/testimonials.ts)
+const quotes = ['Matt Swinarski', 'Uwe Kuhnle', 'Mason Burchette']
+  .map((n) => testimonials.find((t) => t.name === n)!);
 // card titles are always two rows: break at the word that splits the title most evenly
 const twoRows = (name: string): [string, string] => {
   const w = name.split(' ');

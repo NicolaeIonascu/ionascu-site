@@ -3,6 +3,7 @@
 # TODO(owner): several old items share a client name (3x Vodaland, 3x Roofart); mapping below is a best guess.
 
 # Main pages
+/portfolio-2/             /portfolio/                                        301
 /about-me/                /about/                                            301
 /journal/                 /testimonials/                                     301
 /sample-page-2/           /services/interactive-3d-product-instructions/     301

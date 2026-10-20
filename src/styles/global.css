@@ -710,3 +710,18 @@ main:has(section.cta) ~ .site-footer { padding-top: 3.5rem; }
 .site-footer .eyebrow, .site-footer .tag { color: var(--accent-warm); }
 .dark .btn:not(.btn-ghost):not(.btn-ghost-light), .site-footer .btn { background: var(--accent-warm); color: var(--dark); }
 .site-footer .social a:hover { background: var(--accent-warm); border-color: var(--accent-warm); color: var(--dark); }
+
+/* Figures in the "Why animation" cards (18 pages / Long / ~1 min): Blue Fantastic #2c3b4d */
+.compare .big { color: #2c3b4d; }
+/* Section headings on light backgrounds: Blue Fantastic */
+section:not(.dark) h2 .big { color: #2c3b4d; }
+.sand h2 .sub { max-width: none; }
+
+/* Inner pages: smaller page titles (was up to 7.5rem) */
+.page-head h1 { font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.1; }
+.page-head h1 + .lead, .page-head .lead { margin-top: 1.25rem; }
+
+/* Desktop: do not stretch text over the full width - same line length as the intro paragraph (~42rem) */
+@media (min-width: 861px) {
+  .page-head h1 { max-width: 42rem; }
+}

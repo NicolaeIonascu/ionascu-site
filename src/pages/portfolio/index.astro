@@ -1,10 +1,20 @@
 ---
+// Portfolio: every project as an expanding video tile, four per row (the hovered tile widens and plays its clip).
 import PageBanner from '../../components/PageBanner.astro';
 import Base from '../../layouts/Base.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import { projects, categories } from '../../data/projects';
+import FeatureTiles from '../../components/FeatureTiles.astro';
+import { projects } from '../../data/projects';
+import { previews } from '../../data/previews';
+import { featuredTiles } from '../../data/featured';
 
-const used = categories.filter((c) => projects.some((p) => p.category === c));
+const PER_ROW = 4;
+// every project with its chosen fragment (card preview first, then the home-tile one)
+const items = projects.map((p) => {
+  const f = previews[p.slug] ?? featuredTiles.find((t) => t.slug === p.slug);
+  return { slug: p.slug, start: f?.start ?? 0, duration: f?.duration ?? 8 };
+});
+const rows: (typeof items)[] = [];
+for (let i = 0; i < items.length; i += PER_ROW) rows.push(items.slice(i, i + PER_ROW));
 ---
 
 <Base
@@ -13,29 +23,21 @@ const used = categories.filter((c) => projects.some((p) => p.category === c));
 >
   <PageBanner video="roof" eyebrow="Selected work" crumb="Portfolio">
     <h1>Portfolio</h1>
-    <p class="lead">Assembly and installation animations for manufacturers. Pick a project to watch the video.</p>
+    <p class="lead">Assembly and installation animations for manufacturers. Move the mouse over a tile to preview the video, click to open the project.</p>
   </PageBanner>
   <section>
-    <div class="wrap">
-      <div class="filters" role="group" aria-label="Filter by category">
-        <button type="button" data-filter="all" aria-pressed="true">All</button>
-        {used.map((c) => <button type="button" data-filter={c} aria-pressed="false">{c}</button>)}
-      </div>
-      <div class="grid-3" id="grid">
-        {projects.map((p, i) => <ProjectCard project={p} loading={i < 6 ? 'eager' : 'lazy'} />)}
-      </div>
+    <div class="wrap portfolio-tiles">
+      {rows.map((row) => <FeatureTiles items={row} />)}
     </div>
   </section>
 </Base>
 
-<script>
-  // Progressive enhancement: without JS every project is simply visible.
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
-  const cards = document.querySelectorAll<HTMLElement>('#grid [data-cat]');
-  buttons.forEach((b) =>
-    b.addEventListener('click', () => {
-      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      cards.forEach((c) => (c.hidden = b.dataset.filter !== 'all' && c.dataset.cat !== b.dataset.filter));
-    })
-  );
-</script>
+<style is:global>
+  .portfolio-tiles .tiles { margin-bottom: 1.25rem; }
+  /* a last row with fewer tiles keeps the same tile width as the full rows */
+  @media (min-width: 861px) {
+    .portfolio-tiles .tiles:has(.tile:nth-child(1):last-child) { max-width: calc((100% - 3.75rem) / 4); }
+    .portfolio-tiles .tiles:has(.tile:nth-child(2):last-child) { max-width: calc((100% - 3.75rem) / 4 * 2 + 1.25rem); }
+    .portfolio-tiles .tiles:has(.tile:nth-child(3):last-child) { max-width: calc((100% - 3.75rem) / 4 * 3 + 2.5rem); }
+  }
+</style>

@@ -56,23 +56,10 @@ error_page 404 /404.html;
 location /_astro/ { add_header Cache-Control "public, max-age=31536000, immutable"; }
 ```
 
-## 4. Password on `/crm/` (the owner's private page)
+## 4. The owner's CRM page
 
-The page `/crm/` has a login screen, but that only hides the interface in the browser. **Please protect `/crm/` on the server** (HTTP basic auth):
-
-Apache (`dist/crm/.htaccess`, or in the main config):
-```apache
-AuthType Basic
-AuthName "CRM"
-AuthUserFile /path/to/.htpasswd
-Require valid-user
-```
-Nginx:
-```nginx
-location /crm/ { auth_basic "CRM"; auth_basic_user_file /path/to/.htpasswd; }
-```
-Create the user with `htpasswd -c /path/to/.htpasswd <name>` and give the owner the login.
-(If you build on the server, put the rule in the main config, not inside `dist/`, so it is not lost on rebuild.)
+The private CRM (/crm/) works only on the owner's computer (
+pm run dev). It is **not part of the production build**: nothing to configure or password-protect on the server.
 
 ## 5. DNS and mail
 

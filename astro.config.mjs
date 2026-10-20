@@ -68,12 +68,28 @@ const saveFeatured = {
   },
 };
 
+// The private CRM (src/crm/pages) is registered only for stro dev. It is never part of the production build.
+const crmDevOnly = {
+  name: 'crm-dev-only',
+  hooks: {
+    'astro:config:setup': ({ command, injectRoute }) => {
+      if (command !== 'dev') return;
+      injectRoute({ pattern: '/crm', entrypoint: './src/crm/pages/index.astro' });
+      injectRoute({ pattern: '/crm/vs', entrypoint: './src/crm/pages/vs.astro' });
+      injectRoute({ pattern: '/data/projects.json', entrypoint: './src/crm/pages/data/projects.json.ts' });
+      injectRoute({ pattern: '/data/previews.json', entrypoint: './src/crm/pages/data/previews.json.ts' });
+      injectRoute({ pattern: '/data/featured.json', entrypoint: './src/crm/pages/data/featured.json.ts' });
+    },
+  },
+};
+
 export default defineConfig({
   site: 'https://ionascu.com',
   trailingSlash: 'always',
   vite: { plugins: [saveFeatured], server: { fs: { allow: ['..'] } } },
   integrations: [
+    crmDevOnly,
     // noindex pages must not be listed in the sitemap
-    sitemap({ filter: (page) => !page.includes('/thank-you/') && !page.includes('/404') && !page.includes('/crm/') && !page.includes('/portfolio-2/') }),
+    sitemap({ filter: (page) => !page.includes('/thank-you/') && !page.includes('/404') && !page.includes('/crm/') }),
   ],
 });

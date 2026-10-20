@@ -21,8 +21,8 @@ Recommended flow: GitHub repository, then the host builds on every push to `main
 
 **Redirects from the old WordPress URLs** are in `public/_redirects` (Netlify / Cloudflare Pages format, 301). They matter for SEO. On Apache or Nginx they must be converted to `.htaccess` / `nginx.conf` rules. If the host is plain Apache/Nginx, please ask the owner before launch.
 
-**Private page `/crm/`** (clip and tile picker for the owner): it is hidden (noindex, not in the sitemap, not linked) and has a login screen. The login screen only hides the interface in the browser, it does not protect anything. **Before launch put a real password on `/crm/` on the server** (HTTP basic auth, or Cloudflare Access), or delete `src/pages/crm/` and `src/crm/`.
-Demo login for the screen: `demo` / `demo` (change it in `src/crm/app.html`, the SHA-256 of `login:password`).
+**Private page /crm/** (clip and tile picker for the owner): it exists only in the local dev server (
+pm run dev) and is never built into dist/. Nothing to protect on the server.
 
 **Do not commit:** `node_modules/`, `dist/`, `.astro/`, `.env`. They are in `.gitignore`.
 
