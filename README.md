@@ -21,8 +21,7 @@ Recommended flow: GitHub repository, then the host builds on every push to `main
 
 **Redirects from the old WordPress URLs** are in `public/_redirects` (Netlify / Cloudflare Pages format, 301). They matter for SEO. On Apache or Nginx they must be converted to `.htaccess` / `nginx.conf` rules. If the host is plain Apache/Nginx, please ask the owner before launch.
 
-**Private page /crm/** (clip and tile picker for the owner): it exists only in the local dev server (
-pm run dev) and is never built into dist/. Nothing to protect on the server.
+**Private page `/crm/`** (clip and tile picker for the owner): it exists only in the local dev server (`npm run dev`) and is never built into `dist/`. Nothing to protect on the server.
 
 **Do not commit:** `node_modules/`, `dist/`, `.astro/`, `.env`. They are in `.gitignore`.
 

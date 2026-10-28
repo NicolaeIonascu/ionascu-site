@@ -58,8 +58,7 @@ location /_astro/ { add_header Cache-Control "public, max-age=31536000, immutabl
 
 ## 4. The owner's CRM page
 
-The private CRM (/crm/) works only on the owner's computer (
-pm run dev). It is **not part of the production build**: nothing to configure or password-protect on the server.
+The private CRM (`/crm/`) works only on the owner's computer (`npm run dev`). It is **not part of the production build**: nothing to configure or password-protect on the server.
 
 ## 5. DNS and mail
 

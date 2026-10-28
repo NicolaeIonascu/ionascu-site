@@ -24,6 +24,5 @@ export const NAV = [
   { href: '/process/', label: 'Process' },
   { href: '/testimonials/', label: 'Testimonials' },
   { href: '/about/', label: 'About' },
-  { href: '/blog/how-to-create-3d-assembly-instructions/', label: 'Guide' },
   { href: '/blog/', label: 'Blog' },
 ];

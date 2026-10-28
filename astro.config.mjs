@@ -90,6 +90,6 @@ export default defineConfig({
   integrations: [
     crmDevOnly,
     // noindex pages must not be listed in the sitemap
-    sitemap({ filter: (page) => !page.includes('/thank-you/') && !page.includes('/404') && !page.includes('/crm/') }),
+    sitemap({ filter: (page) => !page.includes('/thank-you/') && !page.includes('/404') && !page.includes('/blog/tekom-2026/') && !page.includes('/crm/') }),
   ],
 });

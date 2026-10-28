@@ -1,0 +1,39 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+
+// DRAFT for TEKOM 2026 (flyer QR code points here). Written later by the owner.
+// While it is a draft the page is noindex and left out of the sitemap (astro.config.mjs).
+// When the article is ready: remove `noindex` below and the '/blog/tekom-2026/' exclusion in astro.config.mjs.
+const title = 'TEKOM 2026: Ways to Work Together';
+const description = 'How we can work together: formats of cooperation for technical communication teams, presented at TEKOM 2026.';
+const date = '2026-10-28';
+const url = `${SITE.url}/blog/tekom-2026/`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    datePublished: date,
+    dateModified: date,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={title} description={description} type="article" jsonLd={ld} noindex>
+  <article class="wrap page-head prose" style="padding-bottom:3rem">
+    <p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Blog</a></p>
+    <h1>{title}</h1>
+    <p class="muted">By {SITE.person} · <time datetime={date}>{date}</time></p>
+
+    <p class="lead">This article is coming soon.</p>
+
+    <!-- Write the article here -->
+
+    <p><a href="/contact/">Request a quote</a></p>
+  </article>
+</Base>
