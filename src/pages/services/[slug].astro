@@ -41,7 +41,7 @@ const titleFor = (id: string) => {
 };
 ---
 
-<Base title={s.seoTitle} description={s.seoDescription} jsonLd={ld}>
+<Base title={s.seoTitle} description={s.seoDescription} jsonLd={ld} image={`/og/service-${s.slug}.jpg`}>
   <div class="wrap page-head">
     <p class="crumbs"><a href="/">Home</a> / <a href="/services/">Services</a> / {s.name}</p>
     <h1>{s.h1}</h1>
