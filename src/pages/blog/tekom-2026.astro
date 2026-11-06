@@ -1,13 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
+import YouTube from '../../components/YouTube.astro';
 import { SITE } from '../../data/site';
 
-// DRAFT for TEKOM 2026 (flyer QR code points here). Written later by the owner.
-// While it is a draft the page is noindex and left out of the sitemap (astro.config.mjs).
-// When the article is ready: remove `noindex` below and the '/blog/tekom-2026/' exclusion in astro.config.mjs.
 const title = 'TEKOM 2026: Ways to Work Together';
-const description = 'How we can work together: formats of cooperation for technical communication teams, presented at TEKOM 2026.';
-const date = '2026-10-28';
+const description = 'Add 3D animation to your service portfolio without hiring or buying new software: white-label delivery, referral partnership and joint offering for technical documentation providers and platform vendors.';
+const date = '2026-11-06';
 const url = `${SITE.url}/blog/tekom-2026/`;
 const ld = [
   {
@@ -15,6 +13,7 @@ const ld = [
     '@type': 'Article',
     headline: title,
     description,
+    image: `${SITE.url}/og/blog-tekom-2026.jpg`,
     datePublished: date,
     dateModified: date,
     mainEntityOfPage: url,
@@ -24,16 +23,107 @@ const ld = [
 ];
 ---
 
-<Base title={title} description={description} type="article" jsonLd={ld} image="/og/blog-tekom-2026.jpg" noindex>
+<Base title={title} description={description} type="article" jsonLd={ld} image="/og/blog-tekom-2026.jpg">
   <article class="wrap page-head prose" style="padding-bottom:3rem">
     <p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Blog</a></p>
     <h1>{title}</h1>
     <p class="muted">By {SITE.person} · <time datetime={date}>{date}</time></p>
 
-    <p class="lead">This article is coming soon.</p>
+    <p class="lead">Your clients are asking to see how a product goes together, not only to read about it. You can answer that request and add 3D animation to your service portfolio, without hiring a production team or investing in new software. This article explains where animation adds value and three ways we can work together.</p>
 
-    <!-- Write the article here -->
+    <figure class="fig">
+      <YouTube id="lrt3ct5HByI" title="IKEA HELMER cabinet 3D assembly animation" />
+      <figcaption>A personal showcase: the 18-page IKEA HELMER manual as a one-minute 3D assembly animation.</figcaption>
+    </figure>
 
-    <p><a href="/contact/">Request a quote</a></p>
+    <aside class="callout">
+      <p><strong>What viewers say.</strong> The original HELMER animation has more than 37,000 views on YouTube. <a href="https://www.youtube.com/watch?v=7jgh1vatIW8" target="_blank" rel="noopener">Open the video and read the comments</a>. People who assembled their cabinet express their gratitude for such a clear, visual aid and call it “by far the easiest to understand”. One viewer writes that IKEA should commission animations like this for all of its products.</p>
+    </aside>
+
+    <h2>The gap between a good manual and an installed product</h2>
+    <p>A manual can be accurate and still fail. People skip text, misread a drawing, or cannot picture the order of steps in three dimensions. The result is familiar: calls to support, returned products, installers improvising on site.</p>
+    <p>The cabinet in the film above ships with an 18-page printed guide. As a 3D animation, the same assembly takes about a minute. Every part, screw and drawer appears in the order it goes together, and nobody has to read a word.</p>
+
+    <p>For documentation teams this gap is an opportunity. Text, illustrations and PDF remain the backbone of your deliverables. A short film is the layer on top that customers actually watch.</p>
+
+    <h2>Five places where 3D animation adds value</h2>
+
+    <h3>1. Instructions</h3>
+    <p>Animated 3D steps replace static 2D drawings. The viewer sees the order of work, the position of every part, the tools and the fasteners, in motion and from the angle that matters.</p>
+
+    <h3>2. Localization</h3>
+    <p>One animation serves every language. A film built on numbered steps, pictograms and short captions travels to every market, and only the captions change. Compared with long text that has to be translated and laid out again for each language, this lowers translation costs.</p>
+
+    <h3>3. Service</h3>
+    <p>Show technicians exactly what to do: how to open a unit, replace a part, reach a connection. A clear sequence on a phone or a tablet at the machine means fewer support calls and fewer repeat visits.</p>
+
+    <h3>4. CAD to content</h3>
+    <p>Your CAD data is already the most accurate description of the product. It can be turned into animation, with no redrawing from scratch. Engineering models become content that sales, service and documentation can all use.</p>
+
+    <h3>5. Compliance</h3>
+    <p>Clear safety visuals matter more as regulation moves toward digital and well-structured instructions. The new EU Machinery Regulation (2023/1230) applies from 20 January 2027 and places weight on clear safety information. Animated safety sequences are one effective way to present it. The legal content of the instructions stays with the manufacturer's engineers, and animation makes it easier to see and follow.</p>
+
+    <h2>Three ways to work together</h2>
+    <p>The common idea is simple: bring 3D animation to your clients without hiring or investing in new software. There are three formats, and a first project can start in any of them.</p>
+
+    <h3>White-label delivery</h3>
+    <p><strong>Your clients, your brand. I work behind the scenes.</strong> You keep the client relationship and present the film as part of your own service. I produce it to your brief and your quality standard. This suits agencies and studios that are at capacity, or that need a specialist who builds assembly and installation sequences every day. Confidentiality is agreed before work starts, and what is handed over is defined per project.</p>
+
+    <h3>Referral partnership</h3>
+    <p><strong>You connect your clients with me. I deliver directly, and everyone benefits.</strong> When your clients ask for animated instructions and your offer ends at text and illustrations, you simply make the introduction. The client gets a specialist, you add a service without extra effort, and the arrangement between us is agreed in advance.</p>
+
+    <h3>Joint offering</h3>
+    <p><strong>You combine your expertise with my 3D animation. I work alongside your team.</strong> Documentation providers and platform vendors can offer animation together with text, images and PDF as one package: sample films for your product demonstrations, a partner offer for your customers, or an animation module inside your own service. The films are standard video and, where useful, interactive 3D in the browser, so they can be embedded wherever your customers already publish.</p>
+
+    <h2>What I bring</h2>
+    <p>I bring together expertise in engineering, teaching, filmmaking and 3D animation to create clear, intuitive technical instructions. I have 25+ years of experience in 3D, film and training, and I make assembly and installation animations for manufacturers of furniture, roofing, drainage, siding, lighting and yard products, for brands such as Vodaland, Sagiper, Roofart, Marantec and Ecomodule. The same work covers 3D product animation and interactive 3D instructions that customers can rotate and explore.</p>
+    <p>Films are made for the places where instructions are needed: your website and product pages, YouTube, a QR code on the packaging, or a screen in the store.</p>
+
+    <figure class="fig">
+      <img src="/og/portfolio.jpg" alt="Six frames from 3D assembly and installation animations: furniture caster, roof tiles, timber truss, gutter bracket, rainwater system and a commercial kitchen" width="1200" height="630" loading="lazy" decoding="async" />
+      <figcaption>Selected work. The full list is in the <a href="/portfolio/">portfolio</a>.</figcaption>
+    </figure>
+
+    <blockquote class="callout">
+      <p>“Your communication and attention to detail made this project flow effortlessly.”</p>
+      <p class="muted" style="margin:0">Matt Swinarski, Director of Business Development, Sagiper</p>
+    </blockquote>
+
+    <h2>How a first project works</h2>
+    <ol>
+      <li><strong>Brief.</strong> You send the source: a manual, drawings, photos or a 3D/CAD model, and tell me where the film will be used.</li>
+      <li><strong>Timed script.</strong> The process is split into short actions of a few seconds each, so the length and the structure are clear before any animation is made.</li>
+      <li><strong>Rough preview.</strong> You and your technical specialist check the order of steps, the position of every part, the tools and the pace. Changes are quick at this stage.</li>
+      <li><strong>Final film.</strong> A polished render, ready for your channels.</li>
+    </ol>
+    <p>To start, it is enough to name two people on your side: a technical specialist who knows the product, and a decision maker who approves the script and the final film. Sometimes it is one person. Quick answers keep the project moving.</p>
+
+    <h2>Why it pays off for both sides</h2>
+    <ul>
+      <li><strong>Fewer mistakes at the end user.</strong> A film shows the order of work, so people get it right the first time. The aim is fewer support calls and returns.</li>
+      <li><strong>One production, many uses.</strong> The same film serves the product page, YouTube, the packaging and the store.</li>
+      <li><strong>Lower localization effort.</strong> Numbered steps, pictograms and short captions replace long text in every language.</li>
+      <li><strong>A new service line for you.</strong> You widen your offer with no production team to build and no new software to buy.</li>
+    </ul>
+
+    <h2>Let's explore what we can offer your clients together</h2>
+    <p>If you are visiting tcworld 2026 in Stuttgart (12–14 November), tell me which of the three formats is closest to what you need, and we can meet there. If you are not attending, the same conversation works by video call.</p>
+    <p>Write a few lines about your company, your clients and what they ask for. I will reply with a concrete proposal for a first step.</p>
+    <p>
+      <a class="btn" href="/contact/">Start the conversation</a>
+    </p>
+    <p class="muted">Nicolae Ionascu, founder of IONASCU, 3D Assembly &amp; Installation Animation<br />
+      <a href="mailto:nicolae@ionascu.com">nicolae@ionascu.com</a> · <a href="tel:+37379151212">+373 79 15 12 12</a> · <a href="/">ionascu.com</a></p>
   </article>
 </Base>
+
+<style is:global>
+  .prose .fig { margin: 2rem 0; }
+  .prose .fig img { width: 100%; height: auto; border-radius: var(--radius); }
+  .prose .fig figcaption { margin-top: .6rem; font-size: .9rem; color: var(--muted); }
+  .prose h3 { margin: 1.8em 0 .4em; font-size: 1.3rem; }
+  .prose ol { padding-left: 1.4rem; }
+  .prose ol li { margin-bottom: .6em; }
+  .prose blockquote.callout { margin: 2rem 0; }
+  .prose blockquote.callout p:first-child { font-size: 1.15rem; margin-bottom: .6rem; }
+</style>
