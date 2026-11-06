@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import YouTube from '../../components/YouTube.astro';
 import Faq from '../../components/Faq.astro';
-import { services, commonFaq, type Service } from '../../data/services';
+import { services, commonFaq, videoTitles, type Service } from '../../data/services';
 import { projects } from '../../data/projects';
 import { SITE } from '../../data/site';
 
@@ -36,8 +36,9 @@ const ld = [
 ];
 const others = services.filter((x) => x.slug !== s.slug);
 const titleFor = (id: string) => {
+  if (videoTitles[id]) return videoTitles[id];
   const p = projects.find((p) => p.youtube === id);
-  return p ? `${p.brand}${p.product ? ' ' + p.product : ''} – 3D animation` : '3D animation example';
+  return p ?`${p.brand}${p.product ? ' ' + p.product : ''} – 3D animation` : '3D animation example';
 };
 ---
 
@@ -64,7 +65,7 @@ const titleFor = (id: string) => {
   )}
 
   {s.featured && (
-    <section class="alt">
+    <section class="alt service-featured">
       <div class="wrap"><div class="prose">
         <h2>Example: {s.featured.title}</h2>
         <YouTube id={s.featured.id} title={s.featured.title} />

@@ -24,6 +24,11 @@ export type Service = {
   faq: Faq[];
 };
 
+/** Titles for example videos that are not portfolio projects (YouTube id -> title). */
+export const videoTitles: Record<string, string> = {
+  's7h52WPbWOg': 'AVA HTC process – 3D animation',
+};
+
 export const commonFaq: Faq[] = [
   {
     q: 'What do you need to start a project?',
@@ -150,9 +155,13 @@ export const services: Service[] = [
         ],
       },
     ],
-    // Example film: weighing modules for silos. Add the YouTube id to show it in a large player, e.g. id: 'XXXXXXXXXXX'
-    // featured: { id: '', title: 'Weighing modules for silos', text: 'A film about weighing modules that make it possible to weigh silos. It presents the product, its advantages and how it is mounted.' },
-    videos: ['7OU3whfF0F4', 'mu0LbcXpkIY', 'bO8hlWcV6hA'],
+    featured: {
+      id: 'VnTKpfw-2y8',
+      title: 'Weighing modules for silos',
+      text: 'A film about weighing modules that make it possible to weigh silos. It presents the product, its advantages and how it is mounted, so the buyer understands what it does and why it is worth choosing.',
+    },
+    // product films: Opure, Ecomodule, AVA HTC process (the silo film above is shown separately)
+    videos: ['bO8hlWcV6hA', 'mqF5zQI0bek', 's7h52WPbWOg'],
     faq: [
       {
         q: 'What is the difference between a product animation and an instruction animation?',
