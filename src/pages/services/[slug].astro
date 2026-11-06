@@ -49,6 +49,30 @@ const titleFor = (id: string) => {
     <p class="head-cta"><a class="btn" href="/contact/">Request a quote</a></p>
   </div>
 
+  {s.sections && s.sections.length > 0 && (
+    <section class="after-head">
+      <div class="wrap"><div class="prose service-article">
+        {s.sections.map((sec) => (
+          <Fragment>
+            <h2>{sec.title}</h2>
+            {sec.paragraphs?.map((p) => <p>{p}</p>)}
+            {sec.bullets && <ul>{sec.bullets.map((b) => <li set:html={b} />)}</ul>}
+          </Fragment>
+        ))}
+      </div></div>
+    </section>
+  )}
+
+  {s.featured && (
+    <section class="alt">
+      <div class="wrap"><div class="prose">
+        <h2>Example: {s.featured.title}</h2>
+        <YouTube id={s.featured.id} title={s.featured.title} />
+        <p style="margin-top:1rem">{s.featured.text}</p>
+      </div></div>
+    </section>
+  )}
+
   <section>
     <div class="wrap grid-3">
       {s.points.map((p) => (
