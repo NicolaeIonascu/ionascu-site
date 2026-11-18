@@ -11,8 +11,32 @@ import '@fontsource/anton/latin-400.css';
 import '@fontsource/instrument-serif/latin-400-italic.css';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
+// Romanian letters (ă ș ț) live in the latin-ext subset; the browser downloads these files only when such a letter is on the page
+import '@fontsource/roboto/latin-ext-400.css';
+import '@fontsource/roboto/latin-ext-700.css';
+import '@fontsource/roboto-condensed/latin-ext-400.css';
+import '@fontsource/roboto-condensed/latin-ext-700.css';
+import '@fontsource/montserrat/latin-ext-400.css';
+import '@fontsource/montserrat/latin-ext-500.css';
+import '@fontsource/montserrat/latin-ext-600.css';
+import '@fontsource/montserrat/latin-ext-700.css';
+import '@fontsource/anton/latin-ext-400.css';
+import '@fontsource/instrument-serif/latin-ext-400-italic.css';
+import '@fontsource/ibm-plex-mono/latin-ext-400.css';
+import '@fontsource/ibm-plex-mono/latin-ext-500.css';
+// Russian letters (Cyrillic subsets of Open Sans, the site font; downloaded only when such letters are on the page)
+import '@fontsource/open-sans/latin-ext-400.css';
+import '@fontsource/open-sans/latin-ext-600.css';
+import '@fontsource/open-sans/latin-ext-700.css';
+import '@fontsource/open-sans/cyrillic-400.css';
+import '@fontsource/open-sans/cyrillic-600.css';
+import '@fontsource/open-sans/cyrillic-700.css';
+import '@fontsource/open-sans/cyrillic-ext-400.css';
+import '@fontsource/open-sans/cyrillic-ext-600.css';
+import '@fontsource/open-sans/cyrillic-ext-700.css';
 import '../styles/global.css';
 import { SITE, NAV } from '../data/site';
+import { getLang, stripLang, lp, hasTranslation, langLinks, NO_ENGLISH, LANGS, ui } from '../i18n';
 
 interface Props {
   title: string;
@@ -26,10 +50,27 @@ interface Props {
 }
 
 const { title, description, image = '/og-default.jpg', type = 'website', noindex = false, jsonLd = [] } = Astro.props;
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const enPath = stripLang(Astro.url.pathname);
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const ogImage = new URL(image, SITE.url).href;
-const activeHref = NAV.filter((n) => Astro.url.pathname.startsWith(n.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
+// Romanian and Russian pages use their own version of the social image (public/og/<name>-ro.jpg, <name>-ru.jpg)
+const imagePath = lang !== 'en' && image.startsWith('/og/') ? image.replace(/\.jpg$/, `-${lang}.jpg`) : image;
+const ogImage = new URL(imagePath, SITE.url).href;
+const activeHref = NAV.filter((n) => enPath.startsWith(n.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
 const fullTitle = title.includes('IONASCU') ? title : `${title} | ${SITE.name}`;
+// the same page in the other language (hreflang for search engines, link for the language switcher)
+const links = langLinks(Astro.url.pathname);
+const pageHasRo = hasTranslation(enPath);
+const noEnglish = NO_ENGLISH.includes(enPath);
+const hreflangs = pageHasRo
+  ? [
+      ...LANGS.filter((l) => l !== 'en' || !noEnglish).map((l) => ({ code: l, href: new URL(lp(l, enPath), SITE.url).href })),
+      { code: 'x-default', href: new URL(noEnglish ? lp('ro', enPath) : enPath, SITE.url).href },
+    ]
+  : [];
+const langNames: Record<string, [string, string]> = { en: ['EN', 'English'], ro: ['RO', 'Română'], ru: ['RU', 'Русский'] };
+const altLocales = pageHasRo ? LANGS.filter((l) => l !== lang && (l !== 'en' || !noEnglish)).map((l) => ui[l].ogLocale) : [];
 
 const org = {
   '@context': 'https://schema.org',
@@ -37,31 +78,34 @@ const org = {
   '@id': `${SITE.url}/#organization`,
   name: SITE.name,
   url: SITE.url,
-  description: SITE.description,
+  description: T.siteDescription,
   email: SITE.email,
   founder: { '@type': 'Person', name: SITE.person },
   sameAs: Object.values(SITE.social),
   areaServed: 'Worldwide',
   knowsAbout: ['3D assembly instruction animation', '3D installation instruction animation', 'Technical animation', '3D product animation'],
 };
-const website = { '@context': 'https://schema.org', '@type': 'WebSite', url: SITE.url, name: SITE.name };
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', url: SITE.url, name: SITE.name, inLanguage: LANGS };
 const graph = [org, website, ...jsonLd];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={T.htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {hreflangs.map((h) => <link rel="alternate" hreflang={h.code} href={h.href} />)}
     {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <meta name="generator" content={Astro.generator} />
 
     <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={T.ogLocale} />
+    {altLocales.map((o) => <meta property="og:locale:alternate" content={o} />)}
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -73,15 +117,20 @@ const graph = [org, website, ...jsonLd];
     {graph.map((o) => <script is:inline type="application/ld+json" set:html={JSON.stringify(o)} />)}
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{T.skip}</a>
     <header class="site-header">
       <div class="wrap bar">
-        <a class="brand" href="/" aria-label="IONASCU – home">IONASCU</a>
-        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" />
+        <a class="brand" href={lp(lang, '/')} aria-label={T.homeAria}>IONASCU</a>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label={T.toggleMenu} />
         <label for="nav-toggle" class="burger" aria-hidden="true"><i></i></label>
         <nav class="nav" aria-label="Main">
-          {NAV.map((n) => <a href={n.href} aria-current={n.href === activeHref ? 'page' : undefined}>{n.label}</a>)}
-          <a class="btn btn-sm" href="/contact/">Get a quote</a>
+          {NAV.map((n) => <a href={lp(lang, n.href)} aria-current={n.href === activeHref ? 'page' : undefined}>{T.nav[n.href] ?? n.label}</a>)}
+          <span class="lang-group" role="group" aria-label={T.langSwitch.label}>
+            {links.map((l) => l.lang === lang
+              ? <span class="lang-switch lang-current" lang={l.lang} aria-current="true">{langNames[l.lang][0]}</span>
+              : <a class="lang-switch" href={l.href} hreflang={l.lang} lang={l.lang} title={langNames[l.lang][1]} data-lang={l.lang}>{langNames[l.lang][0]}</a>)}
+          </span>
+          <a class="btn btn-sm" href={lp(lang, '/contact/')}>{T.getQuote}</a>
         </nav>
       </div>
     </header>
@@ -92,18 +141,22 @@ const graph = [org, website, ...jsonLd];
       <div class="wrap cols">
         <div>
           <p class="brand-foot">IONASCU</p>
-          <p class="muted">{SITE.tagline}.<br />By {SITE.person}, 3D artist with 25+ years of experience.</p>
+          {lang === 'ro'
+            ? <p class="muted">Animații 3D pentru instrucțiuni<br />de asamblare și instalare.<br />De {SITE.person}, artist 3D<br />cu peste 25 de ani de experiență.</p>
+            : lang === 'ru'
+              ? <p class="muted">3D-анимация инструкций<br />по сборке и монтажу.<br />Автор: {SITE.person}, 3D-художник<br />с опытом более 25 лет.</p>
+              : <p class="muted">{T.siteTagline}.<br />{T.footer.by(SITE.person)}</p>}
         </div>
         <div>
-          <p class="foot-h">Services</p>
+          <p class="foot-h">{T.footer.services}</p>
           <ul>
-            <li><a href="/services/3d-assembly-instruction-animation/">Assembly & installation animation</a></li>
-            <li><a href="/services/3d-product-animation/">3D product animation</a></li>
-            <li><a href="/services/interactive-3d-product-instructions/">Interactive 3D</a></li>
+            <li><a href={lp(lang, '/services/3d-assembly-instruction-animation/')}>{T.footer.serviceLinks[0]}</a></li>
+            <li><a href={lp(lang, '/services/3d-product-animation/')}>{T.footer.serviceLinks[1]}</a></li>
+            <li><a href={lp(lang, '/services/interactive-3d-product-instructions/')}>{T.footer.serviceLinks[2]}</a></li>
           </ul>
         </div>
         <div>
-          <p class="foot-h">Contact</p>
+          <p class="foot-h">{T.footer.contact}</p>
           <ul>
             <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
             <li><a href={SITE.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
@@ -112,16 +165,36 @@ const graph = [org, website, ...jsonLd];
           </ul>
         </div>
       </div>
-      <div class="wrap social" aria-label="Find me online">
-        <a href={SITE.social.youtube} rel="me noopener" target="_blank" aria-label="YouTube channel" title="YouTube"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg></a>
+      <div class="wrap social" aria-label={T.footer.findMe}>
+        <a href={SITE.social.youtube} rel="me noopener" target="_blank" aria-label={T.footer.youtubeAria} title="YouTube"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg></a>
         <a href={SITE.social.linkedin} rel="me noopener" target="_blank" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4V21H3V9.75zM9.5 9.75h3.8v1.6h.06c.53-1 1.82-2.06 3.75-2.06 4 0 4.74 2.64 4.74 6.07V21h-4v-4.9c0-1.17-.02-2.67-1.63-2.67-1.63 0-1.88 1.27-1.88 2.58V21h-4V9.75z"/></svg></a>
         <a href={SITE.social.fiverr} rel="me noopener" target="_blank" aria-label="Fiverr" title="Fiverr"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M19.2 12.7c-.7 0-1.3.2-1.8.5V5c0-.6-.4-1-1-1h-2c-.6 0-1 .4-1 1v1.1h-1.4V5c0-.6-.4-1-1-1H9c-.6 0-1 .4-1 1v1.1H6.6C5.7 6.1 5 6.8 5 7.7v8.8c0 .9.7 1.6 1.6 1.6h3.8c.9 0 1.6-.7 1.6-1.6V11h1.4v5.5c0 .9.7 1.6 1.6 1.6h1.2c.5.6 1.2.9 2 .9 1.5 0 2.7-1.2 2.7-2.7v-.9c0-1.5-1.2-2.7-2.7-2.7z"/></svg></a>
-        <a href={`mailto:${SITE.email}`} aria-label="Email" title={SITE.email}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm.8 2 8.2 5.6L20.2 7H3.8zM4 17h16V9.4l-8 5.4-8-5.4V17z"/></svg></a>
+        <a href={`mailto:${SITE.email}`} aria-label={T.footer.emailAria} title={SITE.email}><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm.8 2 8.2 5.6L20.2 7H3.8zM4 17h16V9.4l-8 5.4-8-5.4V17z"/></svg></a>
         {SITE.social.whatsapp && <a href={`https://wa.me/${SITE.social.whatsapp}`} rel="noopener" target="_blank" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" ><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.6.8 2 .8 2.1.1.1.1.3 0 .4-.1.2-.1.3-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.6.3.1.2.1.8-.1 1.4z"/></svg></a>}
       </div>
-      <div class="wrap legal">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</div>
+      <div class="wrap legal">{T.footer.rights(new Date().getFullYear(), SITE.name)}</div>
     </footer>
-    <script is:inline>
+    <script is:inline define:vars={{ pageLang: lang, roHref: pageHasRo ? lp('ro', enPath) : null, ruHref: pageHasRo ? lp('ru', enPath) : null }}>
+      // Language choice: a click on the switcher is remembered; on the first visit the first of the browser's languages
+      // that the site has (Romanian or Russian) sends the visitor to that version of the page.
+      (function () {
+        try {
+          function remember(l) { localStorage.setItem('lang', l); document.cookie = 'lang=' + l + '; path=/; max-age=31536000; samesite=lax'; }
+          document.querySelectorAll('.lang-switch[data-lang]').forEach(function (sw) {
+            sw.addEventListener('click', function () { remember(sw.getAttribute('data-lang')); });
+          });
+          if (pageLang === 'en' && !localStorage.getItem('lang')) {
+            var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']);
+            for (var i = 0; i < langs.length; i++) {
+              var c = String(langs[i]).toLowerCase().split('-')[0];
+              if (c === 'en') break;
+              var to = c === 'ro' || c === 'mo' ? ['ro', roHref] : c === 'ru' ? ['ru', ruHref] : null;
+              if (to) { if (to[1]) { remember(to[0]); location.replace(to[1] + location.search + location.hash); } break; }
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>    <script is:inline>
       // links to other websites open in a new tab, so visitors never leave this site
       document.querySelectorAll('a[href]').forEach(function (a) {
         try {

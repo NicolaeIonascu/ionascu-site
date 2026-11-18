@@ -1,0 +1,16 @@
+---
+// "Page not found", used for /404 (English) and /ro/404 (Romanian)
+import Base from '../layouts/Base.astro';
+import { getLang, lp } from '../i18n';
+import { systemPages } from '../i18n/pages';
+const lang = getLang(Astro.url);
+const c = systemPages[lang];
+---
+
+<Base title={c.notFoundTitle} description={c.notFoundDescription} noindex>
+  <div class="wrap page-head" style="min-height:50vh">
+    <h1>{c.notFoundH1}</h1>
+    <p class="lead">{c.notFoundLead}</p>
+    <p><a class="btn" href={lp(lang, '/')}>{c.backHome}</a> <a class="btn btn-ghost" href={lp(lang, '/portfolio/')}>{c.portfolio}</a></p>
+  </div>
+</Base>

@@ -1,0 +1,31 @@
+---
+// Services overview, used for /services/ and /ro/services/
+import Base from '../layouts/Base.astro';
+import { getServices } from '../data/localized';
+import { getLang, lp, ui } from '../i18n';
+import { servicesText } from '../i18n/pages';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = servicesText[lang];
+const services = getServices(lang);
+---
+
+<Base title={c.indexTitle} image="/og/services.jpg" description={c.indexDescription}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / {c.crumb}</p>
+    <h1>{c.h1}</h1>
+    <p class="lead">{c.lead}</p>
+  </div>
+  <section>
+    <div class="wrap grid-3">
+      {services.map((s) => (
+        <a class="card" href={lp(lang, `/services/${s.slug}/`)}>
+          <h2 style="font-size:1.25rem">{s.name}</h2>
+          <p class="muted">{s.seoDescription}</p>
+          <span class="more">{T.learnMore}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

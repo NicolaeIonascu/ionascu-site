@@ -3,6 +3,7 @@
 // Keeps the page fast (no 500 KB of YouTube scripts per video) and respects privacy (youtube-nocookie).
 import { Image } from 'astro:assets';
 import { ytThumb } from '../data/projects';
+import { getLang, ui } from '../i18n';
 import ikeaPoster from '../assets/ikea-cabinet-blue-1280.jpg';
 
 // Sharp, watermark-free posters used instead of YouTube's low-resolution thumbnail (any page that embeds these videos)
@@ -10,10 +11,11 @@ const CUSTOM_POSTERS: Record<string, ImageMetadata> = { lrt3ct5HByI: ikeaPoster 
 interface Props { id: string; title: string; poster?: ImageMetadata; }
 const { id, title, poster: posterProp } = Astro.props;
 const poster = posterProp ?? CUSTOM_POSTERS[id];
+const T = ui[getLang(Astro.url)];
 ---
 
 <lite-yt data-id={id} data-title={title}>
-  <a class="yt" href={`https://www.youtube.com/watch?v=${id}`} aria-label={`Play video: ${title}`}>
+  <a class="yt" href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener" aria-label={T.playVideo(title)}>
     {poster
       ? <Image src={poster} alt={title} widths={[760, 1280, 1520]} sizes="(max-width: 800px) 100vw, 760px" format="webp" quality={88} loading="lazy" decoding="async" />
       : <img src={ytThumb(id)} alt={title} width="480" height="360" loading="lazy" decoding="async" />}

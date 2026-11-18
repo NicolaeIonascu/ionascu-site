@@ -1,0 +1,122 @@
+---
+// Article "Ways to work together", used for /blog/ways-to-work-together/ and the /ro/ and /ru/ versions
+import Base from '../layouts/Base.astro';
+import YouTube from '../components/YouTube.astro';
+import { SITE } from '../data/site';
+import { getLang, lp, ui } from '../i18n';
+import { blogText, cooperationText } from '../i18n/blog';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const b = blogText[lang];
+const c = cooperationText[lang];
+const slug = 'ways-to-work-together';
+const title = b.posts[slug].title;
+const description = b.posts[slug].description;
+const date = '2026-11-06';
+const modified = '2026-11-19';
+const url = `${SITE.url}${lp(lang, `/blog/${slug}/`)}`;
+const link = (s: string) => s.replace('[[portfolio]]', lp(lang, '/portfolio/'));
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: lang,
+    image: `${SITE.url}/og/blog-ways-to-work-together.jpg`,
+    datePublished: date,
+    dateModified: modified,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={title} description={description} type="article" jsonLd={ld} image="/og/blog-ways-to-work-together.jpg">
+  <article class="wrap page-head prose" style="padding-bottom:3rem">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / <a href={lp(lang, '/blog/')}>{b.crumb}</a></p>
+    <h1>{title}</h1>
+    <p class="muted">{b.by} {SITE.person} · <time datetime={date}>{date}</time></p>
+
+    <p class="lead">{c.lead}</p>
+
+    <figure class="fig">
+      <YouTube id="lrt3ct5HByI" title={c.ikeaTitle} />
+      <figcaption>{c.figCaption}</figcaption>
+    </figure>
+
+    <aside class="callout">
+      <p set:html={c.viewers} />
+    </aside>
+
+    <h2>{c.gapH2}</h2>
+    <p>{c.gapP1}</p>
+    <p>{c.gapP2}</p>
+
+    <p>{c.gapP3}</p>
+
+    <h2>{c.fiveH2}</h2>
+    {c.five.map((x) => (
+      <Fragment>
+        <h3>{x[0]}</h3>
+        <p>{x[1]}</p>
+      </Fragment>
+    ))}
+
+    <h2>{c.waysH2}</h2>
+    <p>{c.waysP}</p>
+    {c.ways.map((x) => (
+      <Fragment>
+        <h3>{x[0]}</h3>
+        <p set:html={x[1]} />
+      </Fragment>
+    ))}
+
+    <h2>{c.bringH2}</h2>
+    <p>{c.bringP1}</p>
+    <p>{c.bringP2}</p>
+
+    <figure class="fig">
+      <img src={lang === 'en' ? '/og/portfolio.jpg' : `/og/portfolio-${lang}.jpg`} alt={c.fig2Alt} width="1200" height="630" loading="lazy" decoding="async" />
+      <figcaption set:html={link(c.fig2Caption)} />
+    </figure>
+
+    <blockquote class="callout">
+      <p>{c.quote}</p>
+      <p class="muted" style="margin:0">{c.quoteBy}</p>
+    </blockquote>
+
+    <h2>{c.firstH2}</h2>
+    <ol>
+      {c.first.map((li) => <li set:html={li} />)}
+    </ol>
+    <p>{c.firstP}</p>
+
+    <h2>{c.payH2}</h2>
+    <ul>
+      {c.pay.map((li) => <li set:html={li} />)}
+    </ul>
+
+    <h2>{c.talkH2}</h2>
+    <p>{c.talkP1}</p>
+    <p>{c.talkP2}</p>
+    <p>
+      <a class="btn" href={lp(lang, '/contact/')}>{c.cta}</a>
+    </p>
+    <p class="muted"><Fragment set:html={c.signature} /><br />
+      <a href="mailto:nicolae@ionascu.com">nicolae@ionascu.com</a> · <a href="tel:+37379151212">+373 79 15 12 12</a> · <a href={lp(lang, '/')}>ionascu.com</a></p>
+  </article>
+</Base>
+
+<style is:global>
+  .prose .fig { margin: 2rem 0; }
+  .prose .fig img { width: 100%; height: auto; border-radius: var(--radius); }
+  .prose .fig figcaption { margin-top: .6rem; font-size: .9rem; color: var(--muted); }
+  .prose h3 { margin: 1.8em 0 .4em; font-size: 1.3rem; }
+  .prose ol { padding-left: 1.4rem; }
+  .prose ol li { margin-bottom: .6em; }
+  .prose blockquote.callout { margin: 2rem 0; }
+  .prose blockquote.callout p:first-child { font-size: 1.15rem; margin-bottom: .6rem; }
+</style>

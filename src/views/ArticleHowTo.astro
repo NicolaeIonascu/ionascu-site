@@ -1,0 +1,69 @@
+---
+// Article "How to create 3D assembly instructions", used for /blog/... and /ro/blog/...
+import Base from '../layouts/Base.astro';
+import YouTube from '../components/YouTube.astro';
+import { SITE } from '../data/site';
+import { getLang, lp, ui } from '../i18n';
+import { blogText, howToText } from '../i18n/blog';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const b = blogText[lang];
+const c = howToText[lang];
+const slug = 'how-to-create-3d-assembly-instructions';
+const title = b.posts[slug].title;
+const description = c.description;
+const date = '2026-10-09';
+const url = `${SITE.url}${lp(lang, `/blog/${slug}/`)}`;
+const link = (s: string) => s.replace('[[contact]]', lp(lang, '/contact/')).replace('[[service1]]', lp(lang, '/services/3d-assembly-instruction-animation/'));
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: lang,
+    datePublished: date,
+    dateModified: date,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={title} description={description} type="article" jsonLd={ld} image="/og/blog-how-to-create-3d-assembly-instructions.jpg">
+  <article class="wrap page-head prose" style="padding-bottom:3rem">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / <a href={lp(lang, '/blog/')}>{b.crumb}</a></p>
+    <h1>{title}</h1>
+    <p class="muted">{b.by} {SITE.person} · <time datetime={date}>{date}</time></p>
+
+    <p class="lead">{c.lead}</p>
+
+    <h2>{c.h1a}</h2>
+    <p>{c.p1a}</p>
+
+    <h2>{c.h2a}</h2>
+    <p>{c.p2a}</p>
+    <ul>
+      {c.list.map((li) => <li>{li}</li>)}
+    </ul>
+    <p set:html={c.p2b} />
+
+    <h2>{c.h3a}</h2>
+    <p>{c.p3a}</p>
+
+    <h2>{c.h4a}</h2>
+    <p>{c.p4a}</p>
+
+    <h2>{c.h5a}</h2>
+    <p>{c.p5a}</p>
+
+    <h2>{c.exH2}</h2>
+    <p>{c.exP}</p>
+    <YouTube id="lrt3ct5HByI" title={c.ikeaTitle} />
+
+    <h2>{c.needH2}</h2>
+    <p set:html={link(c.needP)} />
+  </article>
+</Base>

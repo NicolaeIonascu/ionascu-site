@@ -53,3 +53,8 @@
 /portfolio-item/we-need/         /portfolio/double-modular/                  301
 /portfolio-item/it-caused/       /portfolio/pvc-fence/                       301
 /portfolio-item/ecomodule/       /portfolio/ecomodule/                       301
+
+# Renamed article (was the TEKOM 2026 page)
+/blog/tekom-2026/            /blog/ways-to-work-together/                       301
+/ro/blog/tekom-2026/         /ro/blog/ways-to-work-together/                    301
+/ru/blog/tekom-2026/         /ru/blog/ways-to-work-together/                    301

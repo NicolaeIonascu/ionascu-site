@@ -1,0 +1,123 @@
+---
+// One service page, used for /services/<slug>/ and /ro/services/<slug>/
+import Base from '../layouts/Base.astro';
+import YouTube from '../components/YouTube.astro';
+import Faq from '../components/Faq.astro';
+import { getServices, getCommonFaq, videoTitles } from '../data/localized';
+import { projects } from '../data/projects';
+import { SITE } from '../data/site';
+import { getLang, lp, ui } from '../i18n';
+import { servicesText } from '../i18n/pages';
+
+interface Props { slug: string; }
+const { slug } = Astro.props;
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = servicesText[lang];
+const services = getServices(lang);
+const s = services.find((x) => x.slug === slug)!;
+const url = `${SITE.url}${lp(lang, `/services/${s.slug}/`)}`;
+const faq = [...s.faq, ...getCommonFaq(lang)];
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.name,
+    description: s.seoDescription,
+    url,
+    inLanguage: lang,
+    provider: { '@id': `${SITE.url}/#organization` },
+    areaServed: 'Worldwide',
+    serviceType: s.name,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: T.home, item: SITE.url + lp(lang, '/') },
+      { '@type': 'ListItem', position: 2, name: c.crumb, item: SITE.url + lp(lang, '/services/') },
+      { '@type': 'ListItem', position: 3, name: s.name, item: url },
+    ],
+  },
+];
+const others = services.filter((x) => x.slug !== s.slug);
+const titleFor = (id: string) => {
+  if (videoTitles[id]) return lang !== 'en' ? videoTitles[id].replace('– 3D animation', c.videoSuffix) : videoTitles[id];
+  const p = projects.find((p) => p.youtube === id);
+  return p ? `${p.brand}${p.product ? ' ' + p.product : ''} ${c.videoSuffix}` : c.videoFallback;
+};
+---
+
+<Base title={s.seoTitle} description={s.seoDescription} jsonLd={ld} image={`/og/service-${s.slug}.jpg`}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / <a href={lp(lang, '/services/')}>{c.crumb}</a> / {s.name}</p>
+    <h1>{s.h1}</h1>
+    <p class="lead">{s.lead}</p>
+    <p class="head-cta"><a class="btn" href={lp(lang, '/contact/')}>{c.requestQuote}</a></p>
+  </div>
+
+  {s.sections && s.sections.length > 0 && (
+    <section class="after-head">
+      <div class="wrap"><div class="prose service-article">
+        {s.sections.map((sec) => (
+          <Fragment>
+            <h2>{sec.title}</h2>
+            {sec.paragraphs?.map((p) => <p>{p}</p>)}
+            {sec.bullets && <ul>{sec.bullets.map((b) => <li set:html={b} />)}</ul>}
+          </Fragment>
+        ))}
+      </div></div>
+    </section>
+  )}
+
+  {s.featured && (
+    <section class="alt service-featured">
+      <div class="wrap"><div class="prose">
+        <h2>{c.exampleLabel}{s.featured.title}</h2>
+        <YouTube id={s.featured.id} title={s.featured.title} />
+        <p style="margin-top:1rem">{s.featured.text}</p>
+      </div></div>
+    </section>
+  )}
+
+  <section>
+    <div class="wrap grid-3">
+      {s.points.map((p) => (
+        <div class="card"><h3>{p.title}</h3><p class="muted" style="margin:0">{p.text}</p></div>
+      ))}
+    </div>
+  </section>
+
+  {s.videos.length > 0 && (
+    <section class="alt">
+      <div class="wrap">
+        <h2>{c.examples}</h2>
+        <div class="grid-3">
+          {s.videos.map((id) => <YouTube id={id} title={titleFor(id)} />)}
+        </div>
+        <p class="more-row"><a href={lp(lang, '/portfolio/')}>{c.moreProjects}</a></p>
+      </div>
+    </section>
+  )}
+
+  <Faq items={faq} />
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>{c.related}</h2>
+      <div class="grid-3">
+        {others.slice(0, 3).map((o) => (
+          <a class="card" href={lp(lang, `/services/${o.slug}/`)}><h3>{o.name}</h3><span class="more">{T.learnMore}</span></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="dark cta">
+    <div class="wrap">
+      <h2>{c.ctaH2}</h2>
+      <p class="lead muted">{c.ctaLead}</p>
+      <div class="actions"><a class="btn" href={lp(lang, '/contact/')}>{T.getQuote}</a></div>
+    </div>
+  </section>
+</Base>

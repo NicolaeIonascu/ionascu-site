@@ -4,10 +4,14 @@
 import { Image } from 'astro:assets';
 import { projects, projectImage, projectTitle } from '../data/projects';
 import { clipFor } from '../data/clips';
+import { getLang, lp, ui } from '../i18n';
+import { getProjectTitle } from '../data/localized';
 
 interface Item { slug: string; start?: number; duration?: number; source?: 'youtube' | 'file'; }
 interface Props { items: Item[]; }
 const { items } = Astro.props;
+const lang = getLang(Astro.url);
+const T = ui[lang];
 
 const tiles = items.map((it) => {
   const p = projects.find((x) => x.slug === it.slug)!;
@@ -18,14 +22,14 @@ const tiles = items.map((it) => {
 
 <div class="tiles" data-tiles>
   {tiles.map(({ p, start, duration, file }, i) => (
-    <a class="tile" href={`/portfolio/${p.slug}/`} data-file={file} data-start={start} data-duration={duration} aria-label={`${projectTitle(p)}: open project`}>
+    <a class="tile" href={lp(lang, `/portfolio/${p.slug}/`)} data-file={file} data-start={start} data-duration={duration} aria-label={T.openProjectAria(getProjectTitle(p, lang))}>
       <Image src={projectImage(p)} alt="" widths={[480, 720, 960, 1280]} sizes="(max-width: 860px) 100vw, 45vw" format="webp" loading={i === 0 ? 'eager' : 'lazy'} class="tile-img" />
       <div class="tile-video" aria-hidden="true"><div class="yt-slot"></div></div>
       <div class="tile-shade" aria-hidden="true"></div>
       <div class="tile-info">
-        <span class="tag">{p.category}</span>
+        <span class="tag">{T.categories[p.category] ?? p.category}</span>
         <span class="tile-title">{p.brand}{p.product ? ` ${p.product}` : ''}</span>
-        <span class="tile-cta">Open project →</span>
+        <span class="tile-cta">{T.openProject}</span>
       </div>
     </a>
   ))}

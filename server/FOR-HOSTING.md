@@ -70,3 +70,8 @@ The private CRM (`/crm/`) works only on the owner's computer (`npm run dev`). It
 
 - Open `https://ionascu.com/sitemap-index.xml` and a few old WordPress URLs to check the redirects
 - Add the site to Google Search Console and submit the sitemap
+
+## 7. Romanian and Russian versions
+
+The site has English (/), Romanian (/ro/) and Russian (/ru/) pages. To send first-time visitors from Romania and Moldova to the Romanian (or, with a Russian browser, the Russian) home page see **server/GEO-ROMANIAN.md** (nginx GeoIP2 or Cloudflare header, about 20 minutes). The 404 pages are /ro/404/index.html and /ru/404/index.html.
+After a deploy, also load the new redirect rules from `server/redirects.htaccess` / `server/redirects.nginx.conf` (the old TEKOM article address now points to /blog/ways-to-work-together/).

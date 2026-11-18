@@ -1,7 +1,8 @@
 ---
 // Visible FAQ + matching FAQPage JSON-LD (Google requires the markup to match visible content).
+import { getLang, ui } from '../i18n';
 interface Props { items: { q: string; a: string }[]; heading?: string; /** less space above (when the previous section is also white) */ tight?: boolean; }
-const { items, heading = 'Frequently asked questions', tight = false } = Astro.props;
+const { items, heading = ui[getLang(Astro.url)].faqHeading, tight = false } = Astro.props;
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',

@@ -45,3 +45,6 @@ RedirectMatch 301 "^/portfolio-item/opure/?$" /portfolio/opure/
 RedirectMatch 301 "^/portfolio-item/we-need/?$" /portfolio/double-modular/
 RedirectMatch 301 "^/portfolio-item/it-caused/?$" /portfolio/pvc-fence/
 RedirectMatch 301 "^/portfolio-item/ecomodule/?$" /portfolio/ecomodule/
+RedirectMatch 301 "^/blog/tekom-2026/?$" /blog/ways-to-work-together/
+RedirectMatch 301 "^/ro/blog/tekom-2026/?$" /ro/blog/ways-to-work-together/
+RedirectMatch 301 "^/ru/blog/tekom-2026/?$" /ru/blog/ways-to-work-together/

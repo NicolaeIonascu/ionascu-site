@@ -1,0 +1,170 @@
+---
+// Home page body, used for both languages: /  (English) and /ro/  (Romanian). Texts: src/i18n/home.ts
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import whyBg from '../assets/bg/why-animation-hd2.jpg';
+import cmpManual from '../assets/compare/ikea1.jpg';
+import cmpVideo from '../assets/compare/ikea2.jpg';
+import cmpAnim from '../assets/compare/ikea3.jpg';
+import ikeaPoster from '../assets/ikea-cabinet-blue-1280.jpg';
+import ClientLogos from '../components/ClientLogos.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import YouTube from '../components/YouTube.astro';
+import Faq from '../components/Faq.astro';
+import FeatureTiles from '../components/FeatureTiles.astro';
+import Avatar from '../components/Avatar.astro';
+import { featuredTiles } from '../data/featured';
+import { getServices, getCommonFaq, getTestimonials } from '../data/localized';
+import { getLang, lp, ui } from '../i18n';
+import { home } from '../i18n/home';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = home[lang];
+const services = getServices(lang);
+// shown on the home page, in this order (names as in data/testimonials.ts)
+const all = getTestimonials(lang);
+const quotes = ['Matt Swinarski', 'Uwe Kuhnle', 'Mason Burchette'].map((n) => all.find((t) => t.name === n)!);
+// card titles are always two rows: break at the word that splits the title most evenly
+const twoRows = (name: string): [string, string] => {
+  const w = name.split(' ');
+  let best = 1, diff = Infinity;
+  for (let i = 1; i < w.length; i++) { const d = Math.abs(w.slice(0, i).join(' ').length - w.slice(i).join(' ').length); if (d < diff) { diff = d; best = i; } }
+  return [w.slice(0, best).join(' '), w.slice(best).join(' ')];
+};
+const homeFaq = [...getCommonFaq(lang), c.faqExtra];
+const cmpImages = [cmpManual, cmpVideo, cmpAnim];
+const cmpClass = ['cmp-img cmp-fit', 'cmp-img cmp-bw', 'cmp-img'];
+---
+
+<Base title={c.title} image="/og/home.jpg" description={c.description}>
+  <section class="hero hero-full">
+    <HeroVideo />
+    <div class="wrap grid">
+      <div class="hero-spacer" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="eyebrow">{c.heroEyebrow}</p>
+        <h1><span class="big">{c.h1}<em class="serif">{c.h1Em}</em></span><span class="sub">{c.h1Sub}</span></h1>
+        <p class="lead">{c.heroLead}</p>
+        <div class="actions">
+          <a class="btn" href={lp(lang, '/contact/')}>{T.getQuote}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">{c.makeEyebrow}</p>
+      <h2><span class="big">{c.makeH2}<em class="serif">{c.makeH2Em}</em></span><span class="sub">{c.makeSub}</span></h2>
+      <div class="grid-3">
+        {services.map((s) => (
+          <a class="card svc" href={lp(lang, `/services/${s.slug}/`)}>
+            <h3>{twoRows(s.name)[0]}<br />{twoRows(s.name)[1]}</h3>
+            <p class="blurb">{s.blurb ?? s.seoDescription}</p>
+            <p class="detail">{s.lead.split('. ')[0]}.</p>
+            <span class="more">{T.learnMore}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="alt sand has-bg-art" style="padding-bottom:0">
+    <div class="bg-art" aria-hidden="true">
+      <Image src={whyBg} alt="" widths={[960, 1440, 1920, 2560]} sizes="100vw" loading="lazy" decoding="async" />
+    </div>
+    <div class="wrap">
+      <p class="eyebrow">{c.whyEyebrow}</p>
+      <h2><span class="big">{c.whyH2}<em class="serif">{c.whyH2Em}</em>{c.whyH2After}</span><span class="sub">{c.whySub}</span></h2>
+      <div class="compare">
+        {c.cmp.map((x, i) => (
+          <div class="card cmp"><Image class={cmpClass[i]} src={cmpImages[i]} alt={x.alt} widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">{x.big}</span><h3>{x.h}</h3><p class="muted">{x.p}</p></div></div>
+        ))}
+      </div>
+      <div class="showcase" style="max-width:760px">
+        <YouTube id="lrt3ct5HByI" title={c.ikeaTitle} poster={ikeaPoster} />
+      </div>
+    </div>
+    <div class="proof-band">
+      <p>{c.proofBefore}<a href="https://www.youtube.com/watch?v=7jgh1vatIW8" target="_blank" rel="noopener">{c.proofLink}</a>{c.proofAfter}</p>
+    </div>
+  </section>
+
+  <section id="animations">
+    <div class="wrap">
+      <p class="eyebrow">{c.workEyebrow}</p>
+      <h2><span class="big">{c.workH2}<em class="serif">{c.workH2Em}</em></span><span class="sub">{c.workSub}</span></h2>
+      <FeatureTiles items={featuredTiles} />
+      <p class="more-row"><a class="btn btn-ghost" href={lp(lang, '/portfolio/')}>{T.allProjects}</a></p>
+    </div>
+  </section>
+
+  <section class="alt sand trusted">
+    <div class="wrap center">
+      <p class="eyebrow">{c.trusted}</p>
+    </div>
+    <ClientLogos />
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <p class="eyebrow">{c.howEyebrow}</p>
+      <h2><span class="big">{c.howH2}<em class="serif">{c.howH2Em}</em></span><span class="sub">{c.howSub}</span></h2>
+      <ol class="steps">
+        {c.steps.map((s) => <li><h3>{s[0]}</h3><p class="muted">{s[1]}</p></li>)}
+      </ol>
+      <p class="more-row steps-more">{c.howMoreBefore}<a href={lp(lang, '/process/')} style="color:#ffb162;text-decoration:underline;text-underline-offset:.2em">{c.howMoreLink}</a></p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:0">
+    <div class="wrap">
+      <p class="eyebrow">{c.revEyebrow}</p>
+      <h2><span class="big">{c.revH2}<em class="serif">{c.revH2Em}</em></span><span class="sub">{c.revSub}</span></h2>
+      <div class="grid-3">
+        {quotes.map((t) => (
+          <figure class="quote" style="margin:0">
+            <blockquote>“{t.text}”</blockquote>
+            <figcaption class="who" style="display:flex;align-items:center;gap:1rem;margin-top:auto">
+            <Avatar t={t} />
+            <cite>{t.name}<span>{[t.role, t.company].filter(Boolean).join(', ')}</span></cite>
+          </figcaption>
+          </figure>
+        ))}
+      </div>
+      {c.quotesNote && <p class="muted" style="margin-top:1rem;font-size:.9rem">{c.quotesNote}</p>}
+      <p class="more-row"><a href={lp(lang, '/testimonials/')}>{T.readAllTestimonials}</a></p>
+    </div>
+  </section>
+
+  <Faq items={homeFaq} tight />
+
+  <section class="dark cta">
+    <div class="wrap">
+      <h2><span class="big">{c.ctaH2}<em class="serif">{c.ctaH2Em}</em></span><span class="sub">{c.ctaSub}</span></h2>
+      <p class="lead muted">{c.ctaLead}</p>
+      <div class="actions"><a class="btn" href={lp(lang, '/contact/')}>{T.getQuote}</a></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* warm sand tint (the beige of modeus.com) instead of the cool grey for these two sections */
+  .sand { background-color: #e3ddcf; }
+  /* faint black-and-white render behind "Why animation": decoration only, fades in at the top and runs on behind the dark band at the bottom */
+  .has-bg-art { position: relative; overflow: hidden; }
+  .has-bg-art > .wrap { position: relative; z-index: 1; }
+  .bg-art { position: absolute; z-index: 0; inset: 0; opacity: .2; pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 100%); }
+  .bg-art :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+  @media (max-width: 860px) { .bg-art { opacity: .16; } }
+</style>
+
+<script>
+  // the menu turns white once the page is scrolled
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const onScroll = () => header?.classList.toggle('scrolled', scrollY > 40);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

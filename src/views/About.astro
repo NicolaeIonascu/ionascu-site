@@ -1,0 +1,55 @@
+---
+// About page, used for /about/ and /ro/about/
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+import YouTube from '../components/YouTube.astro';
+import photo from '../assets/people/nicolae.jpg';
+import { SITE } from '../data/site';
+import { getLang, lp, ui } from '../i18n';
+import { aboutText } from '../i18n/pages';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = aboutText[lang];
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE.url}/#person`,
+  name: SITE.person,
+  jobTitle: c.jobTitle,
+  url: `${SITE.url}${lp(lang, '/about/')}`,
+  worksFor: { '@id': `${SITE.url}/#organization` },
+  sameAs: Object.values(SITE.social),
+};
+---
+
+<Base title={c.title} image="/og/about.jpg" description={c.description} jsonLd={[person]}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / {c.crumb}</p>
+    <h1>{c.h1}</h1>
+    <p class="lead">{c.lead}</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap split" style="align-items:start">
+      <Image src={photo} alt={c.photoAlt} widths={[400, 800]} sizes="(max-width: 860px) 100vw, 480px" style="border-radius:var(--radius)" />
+      <div class="prose">
+        <p>{c.p1}</p>
+        <p>{c.p2}</p>
+        <p><em>{c.quote}</em></p>
+        <p>{c.p4a}<a href={lp(lang, '/testimonials/')}>{c.p4link}</a>.</p>
+        <p><a class="btn" href={lp(lang, '/contact/')}>{c.cta}</a></p>
+      </div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <h2>{c.caseH2}</h2>
+      <p class="lead">{c.caseLead}</p>
+      <div class="compare">
+        {c.cards.map((x) => <div class="card"><h3>{x[0]}</h3><p class="muted">{x[1]}</p></div>)}
+      </div>
+      <div class="showcase" style="max-width:720px"><YouTube id="lrt3ct5HByI" title={c.ikeaTitle} /></div>
+    </div>
+  </section>
+</Base>

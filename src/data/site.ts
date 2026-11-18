@@ -6,7 +6,7 @@ export const SITE = {
   tagline: '3D Assembly & Installation Instruction Animations',
   description:
     'Turn your assembly manual into a clear 3D animation. Step-by-step assembly and installation instruction videos for manufacturers, by a 3D artist with 25+ years of experience.',
-  email: 'ionascu@gmail.com',
+  email: 'nicolae@ionascu.com',
   // Web3Forms access key (free, https://web3forms.com). Replace to enable the contact form.
   formKey: 'YOUR_WEB3FORMS_ACCESS_KEY',
   social: {

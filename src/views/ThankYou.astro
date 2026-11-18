@@ -1,0 +1,16 @@
+---
+// "Thank you" after the contact form, used for /thank-you/ and /ro/thank-you/
+import Base from '../layouts/Base.astro';
+import { getLang, lp } from '../i18n';
+import { systemPages } from '../i18n/pages';
+const lang = getLang(Astro.url);
+const c = systemPages[lang];
+---
+
+<Base title={c.thanksTitle} description={c.thanksDescription} noindex>
+  <div class="wrap page-head" style="min-height:50vh">
+    <h1>{c.thanksH1}</h1>
+    <p class="lead">{c.thanksLead}</p>
+    <p><a class="btn" href={lp(lang, '/portfolio/')}>{c.browse}</a></p>
+  </div>
+</Base>

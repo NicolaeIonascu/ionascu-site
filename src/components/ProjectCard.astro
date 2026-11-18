@@ -4,21 +4,25 @@ import { projectImage, projectTitle, type Project } from '../data/projects';
 import { previews } from '../data/previews';
 import { featuredTiles } from '../data/featured';
 import { clipFor } from '../data/clips';
+import { getLang, lp, ui } from '../i18n';
+import { getProjectTitle } from '../data/localized';
 interface Props { project: Project; loading?: 'lazy' | 'eager'; }
 const { project, loading = 'lazy' } = Astro.props;
+const lang = getLang(Astro.url);
+const T = ui[lang];
 // hover fragment (YouTube): the card preview chosen in the CRM, else the fragment of its home-page tile
 const pv = previews[project.slug] ?? featuredTiles.find((t) => t.slug === project.slug);
 const clip = pv ? clipFor(project.slug, pv.start ?? 0, pv.duration ?? 8) : undefined; // short local clip cut from the YouTube video
 
 ---
 
-<a class="proj" href={`/portfolio/${project.slug}/`} data-cat={project.category} data-clip={clip}>
+<a class="proj" href={lp(lang, `/portfolio/${project.slug}/`)} data-cat={project.category} data-clip={clip}>
   <div class="proj-media">
-    <Image src={projectImage(project)} alt={`${projectTitle(project)} – video preview`} widths={[360, 560, 720]} sizes="(max-width: 600px) 100vw, 360px" format="webp" loading={loading} />
+    <Image src={projectImage(project)} alt={T.previewAlt(getProjectTitle(project, lang))} widths={[360, 560, 720]} sizes="(max-width: 600px) 100vw, 360px" format="webp" loading={loading} />
     {clip && <video class="clip" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>}
   </div>
   <div class="body">
-    <span class="tag">{project.category}</span>
+    <span class="tag">{T.categories[project.category] ?? project.category}</span>
     <h3>{project.brand}{project.product ? ` ${project.product}` : ''}</h3>
   </div>
 </a>

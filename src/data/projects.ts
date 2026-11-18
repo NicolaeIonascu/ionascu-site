@@ -20,7 +20,7 @@ export type Project = {
 
 export const projects: Project[] = [
   { slug: 'ikea-helmer-assembly-animation', brand: 'IKEA', product: 'HELMER cabinet', category: 'Furniture', youtube: 'lrt3ct5HByI', image: 'ikea.jpg', showcase: true,
-    summary: 'A personal showcase: the 18-page IKEA HELMER manual turned into a one-minute 3D assembly animation.' },
+    summary: 'A personal showcase: the multi-page IKEA HELMER manual turned into a one-minute 3D assembly animation.' },
   { slug: 'vodaland-sand-trap-base', brand: 'Vodaland', product: 'Sand trap base', category: 'Drainage', youtube: 'bQvHA4M-3Fw', image: 'vodaland-sand-trap-base.jpg',
     summary: 'Installation animation of the Vodaland plastic sand trap base 4" (DN100) for drainage systems.' },
   { slug: 'cambridge-skylights', brand: 'Cambridge Skylights', category: 'Roofing', youtube: 'd-UUjJY0BCw', image: 'cambridge-skylights.png' },

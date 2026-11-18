@@ -1,0 +1,34 @@
+---
+// Blog list, used for /blog/ and /ro/blog/. Add new articles to `posts` (newest first) and a page under src/pages/blog and src/pages/ro/blog.
+import Base from '../layouts/Base.astro';
+import { getLang, lp, ui } from '../i18n';
+import { blogText } from '../i18n/blog';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = blogText[lang];
+const posts = [
+  { slug: 'ways-to-work-together', date: '2026-11-06' },
+  { slug: 'how-to-create-3d-assembly-instructions', date: '2026-10-09' },
+];
+---
+
+<Base title={c.indexTitle} image="/og/blog.jpg" description={c.indexDescription}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / {c.crumb}</p>
+    <h1>{c.h1}</h1>
+    <p class="lead">{c.lead}</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap grid-3">
+      {posts.map((p) => (
+        <a class="card" href={lp(lang, `/blog/${p.slug}/`)}>
+          <p class="tag">{p.date}</p>
+          <h2 style="font-size:1.25rem">{c.posts[p.slug].title}</h2>
+          <p class="muted">{c.posts[p.slug].description}</p>
+          <span class="more">{c.read}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

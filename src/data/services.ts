@@ -53,12 +53,12 @@ export const services: Service[] = [
       'Step-by-step 3D animation of how to assemble or install your product, made from your manual or CAD. For furniture, building products and equipment.',
     h1: '3D Assembly & Installation Instruction Animation',
     blurb: 'Step-by-step videos that replace long manuals.',
-    lead: 'Customers do not read 18-page manuals, and installers cannot guess the order of steps. A short animation shows every step from the first part to the finished result, so people get it right the first time, with fewer support calls and returns.',
+    lead: 'Customers do not read long multi-page manuals, and installers cannot guess the order of steps. A short animation shows every step from the first part to the finished result, so people get it right the first time, with fewer support calls and returns.',
     points: [
       { title: 'From your manual to a video', text: 'We turn your text, drawings or PDF guide into a clear, timed animation.' },
       { title: 'Assembly or installation', text: 'On a table at home or on site on a roof, wall or ground: the animation shows how the product fits into the real structure.' },
       { title: 'Every step visible', text: 'Parts, tools and fasteners are shown in the exact order of the work.' },
-      { title: 'Short and clear', text: 'The IKEA HELMER cabinet guide, 18 pages in print, became a one-minute animation.' },
+      { title: 'Short and clear', text: 'The multi-page printed guide for the IKEA HELMER cabinet became a one-minute animation.' },
       { title: 'Video and print together', text: 'Use the animation online and its step images in the printed guide.' },
       { title: 'Ready for any channel', text: 'Product page, YouTube, QR code on the box, in-store screen.' },
     ],
@@ -171,23 +171,23 @@ export const services: Service[] = [
   },
   {
     slug: 'interactive-3d-product-instructions',
-    name: 'Interactive 3D (WebGL) Instructions',
-    seoTitle: 'Interactive 3D Product Instructions (WebGL) | IONASCU',
+    name: 'Interactive 3D Presentations',
+    seoTitle: 'Interactive 3D Product Presentations | IONASCU',
     seoDescription:
-      'Interactive 3D instructions in the browser: rotate, zoom and click parts to see how they install. No plugins, works on any device.',
-    h1: 'Interactive 3D Product Instructions',
+      'Interactive 3D presentations in the browser: rotate, zoom and click parts to explore the product and see how it installs. No plugins, works on any device.',
+    h1: 'Interactive 3D Product Presentations',
     blurb: 'Rotate, zoom and click parts in the browser.',
     lead: 'Go beyond video: customers rotate and zoom the product in their browser and click a part to watch how it is installed. Works on phones and desktops with no plugins.',
     points: [
       { title: 'Click to see the step', text: 'Examples: deck drain channel, elbow and endcap installation, rainwater system.' },
-      { title: 'Runs in the browser', text: 'WebGL, no app or plugin to install. Fast on mobile.' },
+      { title: 'Runs in the browser', text: 'No app or plugin to install. Fast on mobile.' },
       { title: 'Embed on your product page', text: 'Add to your own website with a link or an embed.' },
     ],
     sections: [
       {
         title: 'A product you can explore',
         paragraphs: [
-          'Interactive 3D instructions are demonstration applications that run directly in the browser. They are built with WebGL, on Verge3D technology, so there is nothing to install and they work on phones, tablets and desktops. The customer does not watch a story. The customer takes the product in hand and looks at it from every side.',
+          'Interactive 3D presentations are demonstration applications that run directly in the browser. They are built on Verge3D technology, so there is nothing to install and they work on phones, tablets and desktops. The customer does not watch a story. The customer takes the product in hand and looks at it from every side.',
         ],
       },
       {
@@ -217,7 +217,7 @@ export const services: Service[] = [
     faq: [
       {
         q: 'Do customers need to install anything?',
-        a: 'No. Interactive instructions run in the browser on WebGL, on phones, tablets and desktops, with no app or plugin.',
+        a: 'No. Interactive presentations run in the browser, on phones, tablets and desktops, with no app or plugin.',
       },
       {
         q: 'Can a configurator pass the order to our production and finance departments?',

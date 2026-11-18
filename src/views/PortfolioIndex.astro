@@ -1,0 +1,44 @@
+---
+// Portfolio, used for /portfolio/ and /ro/portfolio/: every project as an expanding video tile, four per row (the hovered tile widens and plays its clip).
+import PageBanner from '../components/PageBanner.astro';
+import Base from '../layouts/Base.astro';
+import FeatureTiles from '../components/FeatureTiles.astro';
+import { projects } from '../data/projects';
+import { previews } from '../data/previews';
+import { featuredTiles } from '../data/featured';
+import { getLang } from '../i18n';
+import { portfolioText } from '../i18n/pages';
+
+const c = portfolioText[getLang(Astro.url)];
+
+const PER_ROW = 4;
+// every project with its chosen fragment (card preview first, then the home-tile one)
+const items = projects.map((p) => {
+  const f = previews[p.slug] ?? featuredTiles.find((t) => t.slug === p.slug);
+  return { slug: p.slug, start: f?.start ?? 0, duration: f?.duration ?? 8 };
+});
+const rows: (typeof items)[] = [];
+for (let i = 0; i < items.length; i += PER_ROW) rows.push(items.slice(i, i + PER_ROW));
+---
+
+<Base title={c.title} image="/og/portfolio.jpg" description={c.description}>
+  <PageBanner video="roof" eyebrow={c.eyebrow} crumb={c.crumb}>
+    <h1>{c.h1}</h1>
+    <p class="lead">{c.lead}</p>
+  </PageBanner>
+  <section>
+    <div class="wrap portfolio-tiles">
+      {rows.map((row) => <FeatureTiles items={row} />)}
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .portfolio-tiles .tiles { margin-bottom: 1.25rem; }
+  /* a last row with fewer tiles keeps the same tile width as the full rows */
+  @media (min-width: 861px) {
+    .portfolio-tiles .tiles:has(.tile:nth-child(1):last-child) { max-width: calc((100% - 3.75rem) / 4); }
+    .portfolio-tiles .tiles:has(.tile:nth-child(2):last-child) { max-width: calc((100% - 3.75rem) / 4 * 2 + 1.25rem); }
+    .portfolio-tiles .tiles:has(.tile:nth-child(3):last-child) { max-width: calc((100% - 3.75rem) / 4 * 3 + 2.5rem); }
+  }
+</style>

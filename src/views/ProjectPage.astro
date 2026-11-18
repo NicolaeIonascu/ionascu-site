@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import YouTube from '../components/YouTube.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects, projectImage, type Project } from '../data/projects';
+import { SITE } from '../data/site';
+import { getProjectTitle, getProjectSummary, getDescription } from '../data/localized';
+import { getLang, lp, ui } from '../i18n';
+import { portfolioText } from '../i18n/pages';
+
+interface Props { slug: string; }
+const { slug } = Astro.props;
+const p = projects.find((x) => x.slug === slug)!;
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = portfolioText[lang];
+const title = getProjectTitle(p, lang);
+const summary = getProjectSummary(p, lang);
+const note = getDescription(p.slug, lang); // text + product facts; the 'check' notes are for the owner and are never shown
+const url = `${SITE.url}${lp(lang, `/portfolio/${p.slug}/`)}`;
+const related = projects.filter((x) => x.slug !== p.slug && x.category === p.category).slice(0, 3);
+const more = related.length ? related : projects.filter((x) => x.slug !== p.slug).slice(0, 3);
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: T.home, item: SITE.url + lp(lang, '/') },
+      { '@type': 'ListItem', position: 2, name: c.crumb, item: SITE.url + lp(lang, '/portfolio/') },
+      { '@type': 'ListItem', position: 3, name: title, item: url },
+    ],
+  },
+  // TODO(owner): add VideoObject once the YouTube upload dates are known (uploadDate is required by Google).
+];
+---
+
+<Base title={title} description={summary} jsonLd={ld} image={projectImage(p).src}>
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / <a href={lp(lang, '/portfolio/')}>{c.crumb}</a> / {p.brand}</p>
+    <p class="tag">{T.categories[p.category] ?? p.category}{p.showcase ? c.showcase : ''}</p>
+    <h1>{title}</h1>
+    <p class="lead">{summary}</p>
+  </div>
+  <section class="after-head">
+    <div class="wrap">
+      <YouTube id={p.youtube} title={title} />
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="wrap split" style="align-items:start">
+      {note && (
+        <div class="prose">
+          <h2 style="margin-top:0">{c.about}</h2>
+          <p>{note.text}</p>
+          {note.product && (
+            <>
+              <h3>{c.product}</h3>
+              <p>{note.product}</p>
+            </>
+          )}
+        </div>
+      )}
+      <div class="prose">
+        <h2 style="margin-top:0">{c.similarH2}</h2>
+        <p>{c.similarP}</p>
+        <p><a class="btn" href={lp(lang, '/contact/')}>{c.requestQuote}</a></p>
+        <p class="muted"><a href={lp(lang, '/services/3d-assembly-instruction-animation/')}>{c.svc1}</a> · <a href={lp(lang, '/services/3d-product-animation/')}>{c.svc2}</a></p>
+      </div>
+    </div>
+  </section>
+  <section class="alt">
+    <div class="wrap">
+      <h2>{c.more}</h2>
+      <div class="grid-3">{more.map((x) => <ProjectCard project={x} />)}</div>
+    </div>
+  </section>
+</Base>

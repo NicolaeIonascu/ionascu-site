@@ -4,6 +4,8 @@
 // connections simply keep the poster image. It pauses when scrolled out of view.
 import { Image } from 'astro:assets';
 import poster from '../assets/hero-poster.png';
+import { getLang, ui } from '../i18n';
+const T = ui[getLang(Astro.url)];
 ---
 
 <div class="hero-media" aria-hidden="true">
@@ -11,7 +13,7 @@ import poster from '../assets/hero-poster.png';
   <video class="hero-video" muted loop playsinline preload="none" tabindex="-1" data-src-xl="/video/hero-3840.av1.mp4" data-src-lg="/video/hero-1920.av1.mp4" data-src-sm="/video/hero-1280.av1.mp4"></video>
 </div>
 <div class="hero-shade" aria-hidden="true"></div>
-<button type="button" class="hero-toggle" aria-label="Pause background video" hidden>
+<button type="button" class="hero-toggle" aria-label={T.pauseBg} data-pause={T.pauseBg} data-play={T.playBg} hidden>
   <span class="pause"></span>
 </button>
 
@@ -47,7 +49,7 @@ import poster from '../assets/hero-poster.png';
       userPaused = !video.paused;
       userPaused ? video.pause() : video.play();
       toggle.classList.toggle('paused', userPaused);
-      toggle.setAttribute('aria-label', userPaused ? 'Play background video' : 'Pause background video');
+      toggle.setAttribute('aria-label', userPaused ? toggle.dataset.play! : toggle.dataset.pause!);
     });
   }
 </script>

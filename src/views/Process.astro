@@ -1,0 +1,80 @@
+---
+// Process page, used for /process/ and /ro/process/. Texts: src/i18n/process.ts
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { getLang, lp, ui } from '../i18n';
+import { processText } from '../i18n/process';
+
+const lang = getLang(Astro.url);
+const T = ui[lang];
+const c = processText[lang];
+const date = '2026-10-09';
+const url = `${SITE.url}${lp(lang, '/process/')}`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: c.headline,
+    description: c.description,
+    inLanguage: lang,
+    datePublished: date,
+    dateModified: date,
+    mainEntityOfPage: url,
+    author: { '@id': `${SITE.url}/#person` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+];
+---
+
+<Base title={c.title} description={c.description} jsonLd={ld} type="article" image="/og/process.jpg">
+  <div class="wrap page-head">
+    <p class="crumbs"><a href={lp(lang, '/')}>{T.home}</a> / {c.crumb}</p>
+    <p class="eyebrow">{c.eyebrow}</p>
+    <h1><span class="big">{c.h1}<em class="serif">.</em></span><span class="sub">{c.sub}</span></h1>
+    <p class="lead">{c.lead}</p>
+  </div>
+
+  <section class="after-head process-intro">
+    <div class="wrap prose narrow">
+      {c.intro.map((p) => <p set:html={p} />)}
+    </div>
+  </section>
+
+  <section class="process-stages">
+    <div class="wrap">
+      {c.stages.map((st) => (
+        <div class="stage">
+          <div class="stage-label"><span class="no">{st.no}</span><span class="name">{st.name}</span></div>
+          <div class="stage-body prose">
+            <h2>{st.h2}</h2>
+            {st.blocks.map((b) => {
+              if ('h3' in b) return <h3>{b.h3}</h3>;
+              if ('p' in b) return <p set:html={b.p} />;
+              if ('ul' in b) return <ul>{b.ul.map((li) => <li set:html={li} />)}</ul>;
+              if ('ol' in b) return <ol>{b.ol.map((li) => <li set:html={li} />)}</ol>;
+              return <div class="callout"><p set:html={b.callout} /></div>;
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap prose narrow">
+      <h2>{c.whyH2}</h2>
+      <p>{c.whyP}</p>
+      <div class="callout">
+        <p set:html={c.whyCallout} />
+      </div>
+    </div>
+  </section>
+
+  <section class="dark cta">
+    <div class="wrap">
+      <h2>{c.ctaH2}</h2>
+      <p class="lead muted">{c.ctaLead}</p>
+      <div class="actions"><a class="btn" href={lp(lang, '/contact/')}>{T.getQuote}</a></div>
+    </div>
+  </section>
+</Base>

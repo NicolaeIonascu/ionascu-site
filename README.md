@@ -35,6 +35,25 @@ npm run dev        # http://localhost:4321  (live reload)
 npm run build      # outputs the finished site to /dist
 npm run preview    # serve /dist locally
 ```
+## Languages (English / Romanian / Russian)
+
+English pages live at `/...`, Romanian pages at `/ro/...` and Russian pages at `/ru/...` (same paths). All are built from the same templates. The switcher order is EN, RO, RU.
+The banner landing page for Moldova is `/ro/producatori/` (Romanian) and `/ru/producatori/` (Russian); it has no English version.
+
+| What | Where |
+|---|---|
+| Menu, footer, buttons, labels (both languages) | `src/i18n/ui.ts` |
+| Language of a page, `/ro/` links, list of translated pages | `src/i18n/index.ts` |
+| Texts of the pages | `src/i18n/home.ts`, `pages.ts`, `process.ts`, `blog.ts` |
+| Services, project descriptions | `src/data/services.ts` + `services.ro.ts` + `services.ru.ts`, `descriptions.ts` + `projects.ro.ts` + `projects.ru.ts` |
+| Page templates (shared by all languages) | `src/views/*.astro`; `src/pages/`, `src/pages/ro/` and `src/pages/ru/` only point to them |
+| Social images (English, `-ro`, `-ru`) | `tools/make-og.ps1` -> `public/og/` |
+
+Client quotes stay in the language the client wrote them in; only job titles are translated.
+To add a page: create the template in `src/views`, one file in `src/pages`, `src/pages/ro` and `src/pages/ru`, add its texts to `src/i18n`, and add the path to `TRANSLATED` in `src/i18n/index.ts`.
+Russian headings use Oswald for the Cyrillic letters (Anton has none); see the `@font-face` rules for 'Anton' in `src/styles/global.css`.
+
+Sending visitors from Romania and Moldova to the Romanian site is done by the server: see `server/GEO-ROMANIAN.md`.
 ## Where to edit what
 
 | What | File |

@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import mason from '../assets/banners/mason.jpg';
 import roof from '../assets/banners/roof.jpg';
 import sky from '../assets/banners/sky.jpg';
+import { getLang, lp, ui } from '../i18n';
 
 interface Props {
   video: 'mason' | 'roof' | 'sky';
@@ -15,6 +16,8 @@ interface Props {
   crumb?: string;
 }
 const { video, eyebrow, crumb } = Astro.props;
+const lang = getLang(Astro.url);
+const T = ui[lang];
 const posters = { mason, roof, sky };
 ---
 
@@ -25,11 +28,11 @@ const posters = { mason, roof, sky };
   </div>
   <div class="banner-shade" aria-hidden="true"></div>
   <div class="wrap banner-copy">
-    {crumb && <p class="banner-crumbs"><a href="/">Home</a> / {crumb}</p>}
+    {crumb && <p class="banner-crumbs"><a href={lp(lang, '/')}>{T.home}</a> / {crumb}</p>}
     {eyebrow && <p class="banner-eyebrow">{eyebrow}</p>}
     <slot />
   </div>
-  <button type="button" class="banner-toggle" aria-label="Pause background video" hidden><span class="p"></span></button>
+  <button type="button" class="banner-toggle" aria-label={T.pauseBg} data-pause={T.pauseBg} data-play={T.playBg} hidden><span class="p"></span></button>
 </section>
 
 <style>
@@ -81,7 +84,7 @@ const posters = { mason, roof, sky };
       userPaused = !video.paused;
       userPaused ? video.pause() : video.play();
       toggle.classList.toggle('paused', userPaused);
-      toggle.setAttribute('aria-label', userPaused ? 'Play background video' : 'Pause background video');
+      toggle.setAttribute('aria-label', userPaused ? toggle.dataset.play! : toggle.dataset.pause!);
     });
   });
 </script>

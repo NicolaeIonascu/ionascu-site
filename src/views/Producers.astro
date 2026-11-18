@@ -1,0 +1,211 @@
+---
+// Landing page for the banner on Moldovan business websites (Romanian and Russian only): /ro/producatori/ and /ru/producatori/
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import YouTube from '../components/YouTube.astro';
+import Faq from '../components/Faq.astro';
+import { SITE } from '../data/site';
+import { getLang, lp } from '../i18n';
+
+const lang = getLang(Astro.url);
+const L = {
+  ro: {
+    title: 'Animații 3D pentru instrucțiuni de montaj: pentru producători din Moldova | IONASCU',
+    description:
+      'Aveți un produs cu instrucțiune de montaj, asamblare sau întreținere? O animație 3D le arată clienților exact ce au de făcut. Pentru producători și distribuitori din Moldova.',
+    eyebrow: 'Pentru producători și distribuitori din Moldova',
+    crumb: 'Pentru producători',
+    h1: 'Arătați clienților cum se montează produsul dvs.',
+    lead: 'O animație 3D scurtă înlocuiește o instrucțiune tipărită de multe pagini: clientul vede fiecare pas și face totul corect din prima.',
+    waBtn: 'Scrieți-ne pe WhatsApp',
+    moreBtn: 'Vezi mai multe exemple',
+    introH2: 'Sunteți producător sau distribuitor?',
+    introP: 'Dacă produsul dvs. are o instrucțiune de montaj, de asamblare sau de întreținere, animația le arată clienților cel mai bine cum să îl monteze și cum să îl folosească. Oamenii înțeleg mișcarea mult mai ușor decât un desen sau un text lung.',
+    cases: [
+      ['Aveți un manual tipărit sau PDF', 'Îl transformăm într-o animație 3D clară, cu aceiași pași în aceeași ordine. Imaginile pașilor pot intra și în ghidul tipărit.'],
+      ['Produs nou, fără manual', 'Pornim de la modelul 3D, de la desene sau de la fotografii și realizăm direct filmul de montaj. Filmul devine instrucțiunea principală.'],
+      ['Vreți să prezentați produsul', 'O animație de produs arată ce este, la ce folosește, cum funcționează și de ce este mai bun, cu avantaje și caracteristici.'],
+    ],
+    whyH2: 'De ce animație',
+    why: [
+      ['Se înțelege fără a citi', 'Pașii numerotați și mișcarea pieselor sunt clare pentru toți clienții, indiferent dacă citesc în română, în rusă sau în altă limbă.'],
+      ['Mai puține greșeli', 'Clientul vede ordinea lucrărilor, uneltele și elementele de fixare. Scopul este mai puține apeluri la suport și mai puține retururi.'],
+      ['Utilizări diverse', 'Pagina produsului, YouTube, un cod QR pe ambalaj, ecranul din magazin, târgurile și rețelele sociale.'],
+    ],
+    exH2: 'Exemple din lucrările noastre',
+    exP: 'Filme realizate pentru producători de lucrări de acoperiș, uși de garaj și sisteme de drenaj și amenajare a curții:',
+    videos: ['Cambridge Skylights – animație 3D de instalare', 'Marantec – animație 3D de instalare a ușilor de garaj', 'Vodaland – animație 3D de produs'],
+    allProjects: 'Toate proiectele →',
+    howH2: 'Cum lucrăm',
+    steps: [
+      ['Trimiteți materialele', 'Manual, desene, CAD sau fotografii.'],
+      ['Elaborăm scenariul cronometrat', 'Un scenariu cronometrat al fiecărui pas.'],
+      ['Previzualizare brută', 'O previzualizare rapidă pe care o puteți modifica.'],
+      ['Videoclip final', 'Randare finisată, gata de publicare.'],
+    ],
+    howMore: 'Descrierea completă a procesului: ',
+    howLink: 'Cum se realizează un film tehnic 3D →',
+    faq: [
+      {
+        q: 'Ce trebuie să vă trimit pentru a începe?',
+        a: 'Ghidul existent de montaj sau de asamblare (PDF, desene sau text) și orice fișiere 3D ori CAD, desene sau fotografii ale produsului. Dacă produsul este nou și nu are manual, ajunge un model 3D sau desene, plus o explicație a succesiunii lucrărilor. Trimiteți ce aveți, iar noi vă spunem ce mai lipsește.',
+      },
+      {
+        q: 'Văd animația înainte să fie finală?',
+        a: 'Da. Lucrul începe cu un scenariu cronometrat și cu o previzualizare brută, astfel încât să aprobați succesiunea pașilor înainte de randarea finală.',
+      },
+      {
+        q: 'Unde pot folosi filmul?',
+        a: 'Pe site-ul și pe paginile produselor dvs., pe YouTube, printr-un cod QR pe ambalaj sau în manualul tipărit, pe ecrane în magazin și la târguri. Se livrează ca fișier video standard.',
+      },
+    ],
+    ctaH2: 'Spuneți-ne despre produsul dvs.',
+    ctaLead: 'Trimiteți manualul sau desenele și primiți un plan clar și o ofertă.',
+    mailSubject: 'Cerere%20de%20ofert%C4%83',
+    serviceName: 'Animații 3D pentru instrucțiuni de montaj și utilizare',
+  },
+  ru: {
+    title: 'Анимации 3D-монтажа для производителей Молдовы | IONASCU',
+    description:
+      'Есть изделие с инструкцией по монтажу, сборке или обслуживанию? 3D-анимация покажет клиентам, что именно делать. Для производителей и дистрибьюторов Молдовы.',
+    eyebrow: 'Для производителей и дистрибьюторов из Молдовы',
+    crumb: 'Для производителей',
+    h1: 'Покажите клиентам, как монтируется ваше изделие',
+    lead: 'Короткая 3D-анимация заменяет многостраничную печатную инструкцию: клиент видит каждый шаг и всё делает правильно с первого раза.',
+    waBtn: 'Напишите нам в WhatsApp',
+    moreBtn: 'Больше примеров',
+    introH2: 'Вы производитель или дистрибьютор?',
+    introP: 'Если у вашего изделия есть инструкция по монтажу, сборке или обслуживанию, анимация лучше всего покажет клиентам, как его монтировать и как им пользоваться. Люди понимают движение гораздо легче, чем чертёж или длинный текст.',
+    cases: [
+      ['Есть печатная инструкция или PDF', 'Мы превращаем её в понятную 3D-анимацию с теми же шагами в том же порядке. Картинки шагов можно использовать и в печатной инструкции.'],
+      ['Новое изделие, без инструкции', 'Исходим из 3D-модели, чертежей или фотографий и сразу делаем монтажный фильм. Фильм становится основной инструкцией.'],
+      ['Хотите представить изделие', 'Анимация продукта показывает, что это, для чего нужно, как работает и чем лучше, с преимуществами и характеристиками.'],
+    ],
+    whyH2: 'Почему анимация',
+    why: [
+      ['Понятно без чтения', 'Нумерованные шаги и движение деталей понятны всем клиентам, читают ли они по-румынски, по-русски или на другом языке.'],
+      ['Меньше ошибок', 'Клиент видит порядок работ, инструменты и крепёж. Цель – меньше обращений в поддержку и меньше возвратов.'],
+      ['Разные применения', 'Страница товара, YouTube, QR-код на упаковке, экран в магазине, выставки и соцсети.'],
+    ],
+    exH2: 'Примеры наших работ',
+    exP: 'Фильмы, созданные для производителей кровельных изделий, гаражных ворот и систем водоотвода и благоустройства двора:',
+    videos: ['Cambridge Skylights – 3D-анимация монтажа', 'Marantec – 3D-анимация монтажа гаражных ворот', 'Vodaland – 3D-анимация продукта'],
+    allProjects: 'Все проекты →',
+    howH2: 'Как мы работаем',
+    steps: [
+      ['Пришлите материалы', 'Инструкция, чертежи, CAD или фото.'],
+      ['Мы пишем сценарий с хронометражем', 'Сценарий каждого шага с длительностью.'],
+      ['Черновой просмотр', 'Быстрый просмотр, который можно изменить.'],
+      ['Готовое видео', 'Финальный рендер, готовый к публикации.'],
+    ],
+    howMore: 'Полное описание процесса: ',
+    howLink: 'Как создаётся технический 3D-фильм →',
+    faq: [
+      {
+        q: 'Что нужно вам прислать, чтобы начать?',
+        a: 'Существующую инструкцию по монтажу или сборке (PDF, чертежи или текст) и любые 3D- или CAD-файлы, чертежи или фотографии изделия. Если изделие новое и инструкции нет, достаточно 3D-модели или чертежей и объяснения последовательности работ. Пришлите то, что есть, а мы подскажем, чего не хватает.',
+      },
+      {
+        q: 'Увижу ли я анимацию до того, как она будет готова?',
+        a: 'Да. Работа начинается со сценария с хронометражем и чернового просмотра, поэтому вы утверждаете последовательность шагов до финального рендера.',
+      },
+      {
+        q: 'Где можно использовать фильм?',
+        a: 'На вашем сайте и страницах товаров, на YouTube, через QR-код на упаковке или в печатной инструкции, на экранах в магазине и на выставках. Передаётся как обычный видеофайл.',
+      },
+    ],
+    ctaH2: 'Расскажите нам о вашем изделии',
+    ctaLead: 'Пришлите инструкцию или чертежи и получите понятный план и расчёт стоимости.',
+    mailSubject: '%D0%97%D0%B0%D0%BF%D1%80%D0%BE%D1%81%20%D1%86%D0%B5%D0%BD%D1%8B',
+    serviceName: '3D-анимации для инструкций по монтажу и использованию',
+  },
+}[lang === 'ru' ? 'ru' : 'ro'];
+
+const wa = `https://wa.me/${SITE.social.whatsapp}`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: L.serviceName,
+    description: L.description,
+    url: `${SITE.url}${lp(lang, '/producatori/')}`,
+    inLanguage: lang,
+    provider: { '@id': `${SITE.url}/#organization` },
+    areaServed: ['MD', 'RO'],
+    serviceType: '3D assembly and installation instruction animation',
+  },
+];
+---
+
+<Base title={L.title} description={L.description} jsonLd={ld} image="/og/producatori.jpg">
+  <PageBanner video="roof" eyebrow={L.eyebrow} crumb={L.crumb}>
+    <h1>{L.h1}</h1>
+    <p class="lead">{L.lead}</p>
+    <p class="head-cta">
+      <a class="btn" href={wa} target="_blank" rel="noopener">{L.waBtn}</a>
+      <a class="btn btn-ghost-light" href={lp(lang, '/portfolio/')} style="margin-left:.75rem">{L.moreBtn}</a>
+    </p>
+  </PageBanner>
+
+  <section style="padding-bottom:3rem">
+    <div class="wrap prose">
+      <h2>{L.introH2}</h2>
+      <p>{L.introP}</p>
+      <p><a class="btn" href={lp(lang, '/portfolio/')}>{L.moreBtn} →</a></p>
+    </div>
+  </section>
+
+  <section class="after-head">
+    <div class="wrap grid-3">
+      {L.cases.map((x) => <div class="card"><h3>{x[0]}</h3><p class="muted" style="margin:0">{x[1]}</p></div>)}
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>{L.whyH2}</h2>
+      <div class="grid-3">
+        {L.why.map((x) => <div class="card"><h3>{x[0]}</h3><p class="muted" style="margin:0">{x[1]}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap prose">
+      <h2>{L.exH2}</h2>
+      <p>{L.exP} <strong>Cambridge Skylights</strong>, <strong>Marantec</strong>{lang === 'ru' ? ' и ' : ' și '}<strong>Vodaland</strong>.</p>
+    </div>
+    <div class="wrap grid-3" style="margin-top:2rem">
+      <YouTube id="d-UUjJY0BCw" title={L.videos[0]} />
+      <YouTube id="1QNZpLGdPHs" title={L.videos[1]} />
+      <YouTube id="us2FKK7Oxy4" title={L.videos[2]} />
+    </div>
+    <div class="wrap">
+      <p class="more-row"><a href={lp(lang, '/portfolio/')}>{L.allProjects}</a></p>
+    </div>
+  </section>
+
+  <section class="dark">
+    <div class="wrap">
+      <h2>{L.howH2}</h2>
+      <ol class="steps">
+        {L.steps.map((x) => <li><h3>{x[0]}</h3><p class="muted">{x[1]}</p></li>)}
+      </ol>
+      <p class="more-row steps-more">{L.howMore}<a href={lp(lang, '/process/')} style="color:#ffb162;text-decoration:underline;text-underline-offset:.2em">{L.howLink}</a></p>
+    </div>
+  </section>
+
+  <Faq items={L.faq} />
+
+  <section class="dark cta" id="contact">
+    <div class="wrap">
+      <h2>{L.ctaH2}</h2>
+      <p class="lead muted">{L.ctaLead}</p>
+      <div class="actions">
+        <a class="btn" href={wa} target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-ghost-light" href="tel:+37379151212" style="margin-left:.75rem">+373 79 15 12 12</a>
+        <a class="btn btn-ghost-light" href={`mailto:${SITE.email}?subject=${L.mailSubject}`} style="margin-left:.75rem">{SITE.email}</a>
+      </div>
+    </div>
+  </section>
+</Base>

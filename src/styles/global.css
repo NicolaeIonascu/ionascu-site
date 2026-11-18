@@ -637,7 +637,7 @@ em.serif, .dark em.serif, .hero-full em.serif, .hero-copy h1 .big em.serif { fon
 
 /* home: the menu sits on top of the animation; it gets a white background once the page is scrolled */
 body:has(.hero-full) .site-header { position: fixed; top: 0; left: 0; right: 0; background: transparent; backdrop-filter: none; border-bottom-color: transparent; transition: background .3s ease, border-color .3s ease; }
-body:has(.hero-full) .site-header.scrolled { background: rgb(238 233 223 / .94); backdrop-filter: blur(8px); border-bottom-color: var(--line); }
+body:has(.hero-full) .site-header.scrolled, body:has(.hero-full) .site-header:hover, body:has(.hero-full) .site-header:focus-within { background: rgb(238 233 223 / .94); backdrop-filter: blur(8px); border-bottom-color: var(--line); }
 body:has(.hero-full) .hero-full { padding-top: calc(clamp(4rem, 9vw, 7rem) + 64px); }
 @media (max-width: 860px) { body:has(.hero-full) .site-header:has(.nav-toggle:checked) { background: var(--card); } }
 
@@ -661,7 +661,8 @@ body:has(.hero-full) .hero-full { padding-top: calc(clamp(4rem, 9vw, 7rem) + 64p
 @media (max-width: 860px) { .hero-full .hero-shade { background: radial-gradient(ellipse 80% 40% at 50% 52%, rgb(238 233 223 / .82) 0%, rgb(238 233 223 / .55) 55%, rgb(238 233 223 / 0) 100%); } }
 
 /* the manual illustration is shown whole, with air around it */
-.compare .cmp .cmp-fit { object-fit: contain; background: rgb(233 228 217); padding: .55rem .8rem; }
+/* the white of the picture blends into the card colour (multiply), so only the drawing lines remain */
+.compare .cmp .cmp-fit { object-fit: contain; background: transparent; mix-blend-mode: multiply; filter: brightness(1.12) contrast(1.2); padding: .55rem .8rem; }
 
 /* taller banners on the inner pages (portfolio, services, ...) */
 section.banner[data-banner] { min-height: clamp(420px, 62vh, 640px); padding-top: calc(clamp(3rem, 7vw, 5rem) + 20px); }
@@ -733,3 +734,21 @@ section:not(.dark) h2 .big { color: #2c3b4d; }
 /* The first heading of a block must not add its own top margin on top of the section padding */
 .stage-body > h2:first-child, .stage-body.prose > h2:first-child { margin-top: 0; }
 section h2:first-child, section .prose > h2:first-child { margin-top: 0; }
+
+/* Language switch (EN / RO) in the menu */
+.nav .lang-switch { font-family: var(--font-menu); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-decoration: none; border: 1px solid currentColor; border-radius: 4px; padding: .22rem .5rem; line-height: 1; opacity: .75; }
+.nav .lang-switch:hover { opacity: 1; }
+/* Anton has no Cyrillic letters: Russian headings use Oswald SemiBold (the closest condensed face), added to the 'Anton' family by letter range */
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/oswald-cyrillic-600-normal.woff2') format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/oswald-cyrillic-ext-600-normal.woff2') format('woff2'); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+/* the long words in the three comparison cards ("Many pages", "Multe pagini", "Много страниц") stay on one line */
+html[lang='ro'] .compare .big, html[lang='ru'] .compare .big { font-size: clamp(1.4rem, 2.5vw, 2.3rem); white-space: nowrap; }
+.compare .cmp-text p { white-space: pre-line; } /* a line break (\n) in the card text is kept */
+.hero-copy .lead { text-wrap: balance; } /* no single word left alone on the last line */
+.nav .lang-group { display: inline-flex; gap: .25rem; }
+.nav .lang-switch.lang-current { opacity: 1; background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Romanian: the comma under Ș / Ț hangs below the baseline; give uppercase headings a little more line height so it never touches the next line */
+html[lang='ro'] h1, html[lang='ro'] h2, html[lang='ro'] h3, html[lang='ro'] .tile-title, html[lang='ro'] .compare .big { line-height: 1.24; }
+html[lang='ro'] h1:has(> .big), html[lang='ro'] h2:has(> .big) { line-height: 1.14; }
+html[lang='ro'] .hero-copy h1 { line-height: 1.16; }

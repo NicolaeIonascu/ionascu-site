@@ -1,0 +1,10 @@
+---
+import ServicePage from '../../../views/ServicePage.astro';
+import { services } from '../../../data/services';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { slug: s.slug } }));
+}
+const { slug } = Astro.props as { slug: string };
+---
+<ServicePage slug={slug} />
