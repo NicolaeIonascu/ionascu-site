@@ -36,6 +36,25 @@ jobs:
           export RSYNC_RSH="ssh -i $HOME/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes"
           target="ionascu-deploy@176.58.98.83"
           release="/var/www/ionascu-static/releases/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA}"
+          # Free disk space first: every deploy leaves a ~40 MB release folder on the server.
+          # Keeps the live release and the 4 newest ones (the rollback target is always among them), removes older ones.
+          # A failure here is not fatal: the deploy below then simply tries anyway.
+          ssh -i ~/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$target" bash -s <<'CLEANUP' || echo "cleanup skipped (see messages above)"
+          set -u
+          cd /var/www/ionascu-static
+          echo "disk before:"; df -h . | tail -n 1
+          live="$(readlink -f current || true)"
+          i=0
+          for d in $(ls -1dt releases/*/ 2>/dev/null | sed 's#/$##'); do
+            i=$((i+1))
+            if [ "$i" -le 4 ]; then continue; fi
+            if [ "$(readlink -f "$d")" = "$live" ]; then continue; fi
+            case "$(basename "$d")" in
+              [0-9]*-[0-9]*-*) rm -rf -- "$d" && echo "removed $d" || echo "could not remove $d" ;;
+            esac
+          done
+          echo "disk after:"; df -h . | tail -n 1
+          CLEANUP
           ssh -i ~/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$target" "mkdir -p '$release'"
           rsync -rlz --chmod=D755,F644 dist/ "$target:$release/"
           ssh -i ~/.ssh/ionascu -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes "$target" bash -s -- "$release" <<'REMOTE'
