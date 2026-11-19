@@ -11,6 +11,12 @@ import { aboutText } from '../i18n/pages';
 const lang = getLang(Astro.url);
 const T = ui[lang];
 const c = aboutText[lang];
+// the three cards open: IKEA's own HELMER assembly manual (PDF), an amateur assembly video, and the 3D animation
+const caseLinks = [
+  'https://www.ikea.com/us/en/assembly_instructions/helmer-drawer-unit-on-casters-blue__AA-211429-12-2.pdf',
+  'https://youtu.be/lO9yXdS7tVA',
+  'https://youtu.be/7jgh1vatIW8',
+];
 
 const person = {
   '@context': 'https://schema.org',
@@ -47,7 +53,7 @@ const person = {
       <h2>{c.caseH2}</h2>
       <p class="lead">{c.caseLead}</p>
       <div class="compare">
-        {c.cards.map((x) => <div class="card"><h3>{x[0]}</h3><p class="muted">{x[1]}</p></div>)}
+        {c.cards.map((x, i) => <a class="card" href={caseLinks[i]} target="_blank" rel="noopener"><h3>{x[0]}</h3><p class="muted">{x[1]}</p></a>)}
       </div>
       <div class="showcase" style="max-width:720px"><YouTube id="lrt3ct5HByI" title={c.ikeaTitle} /></div>
     </div>

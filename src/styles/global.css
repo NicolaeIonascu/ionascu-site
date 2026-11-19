@@ -745,6 +745,7 @@ section h2:first-child, section .prose > h2:first-child { margin-top: 0; }
 html[lang='ro'] .compare .big, html[lang='ru'] .compare .big { font-size: clamp(1.4rem, 2.5vw, 2.3rem); white-space: nowrap; }
 .compare .cmp-text p { white-space: pre-line; } /* a line break (\n) in the card text is kept */
 .hero-copy .lead { text-wrap: balance; } /* no single word left alone on the last line */
+.compare a.card { display: block; color: inherit; text-decoration: none; cursor: pointer; }
 .nav .lang-group { display: inline-flex; gap: .25rem; }
 .nav .lang-switch.lang-current { opacity: 1; background: var(--ink); color: #fff; border-color: var(--ink); }
 

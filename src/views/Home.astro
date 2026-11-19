@@ -35,6 +35,12 @@ const twoRows = (name: string): [string, string] => {
 const homeFaq = [...getCommonFaq(lang), c.faqExtra];
 const cmpImages = [cmpManual, cmpVideo, cmpAnim];
 const cmpClass = ['cmp-img cmp-fit', 'cmp-img cmp-bw', 'cmp-img'];
+// the three cards open: IKEA's own HELMER assembly manual (PDF), an amateur assembly video, and the 3D animation
+const cmpLinks = [
+  'https://www.ikea.com/us/en/assembly_instructions/helmer-drawer-unit-on-casters-blue__AA-211429-12-2.pdf',
+  'https://youtu.be/lO9yXdS7tVA',
+  'https://youtu.be/7jgh1vatIW8',
+];
 ---
 
 <Base title={c.title} image="/og/home.jpg" description={c.description}>
@@ -79,7 +85,7 @@ const cmpClass = ['cmp-img cmp-fit', 'cmp-img cmp-bw', 'cmp-img'];
       <h2><span class="big">{c.whyH2}<em class="serif">{c.whyH2Em}</em>{c.whyH2After}</span><span class="sub">{c.whySub}</span></h2>
       <div class="compare">
         {c.cmp.map((x, i) => (
-          <div class="card cmp"><Image class={cmpClass[i]} src={cmpImages[i]} alt={x.alt} widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">{x.big}</span><h3>{x.h}</h3><p class="muted">{x.p}</p></div></div>
+          <a class="card cmp" href={cmpLinks[i]} target="_blank" rel="noopener"><Image class={cmpClass[i]} src={cmpImages[i]} alt={x.alt} widths={[480, 720]} sizes="(max-width: 860px) 100vw, 380px" loading="lazy" /><div class="cmp-text"><span class="big">{x.big}</span><h3>{x.h}</h3><p class="muted">{x.p}</p></div></a>
         ))}
       </div>
       <div class="showcase" style="max-width:760px">
