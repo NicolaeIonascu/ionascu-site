@@ -59,6 +59,36 @@ const cmpLinks = [
     </div>
   </section>
 
+  <section class="uses">
+    <div class="wrap">
+      <p class="eyebrow">{c.useEyebrow}</p>
+      <h2><span class="big">{c.useH2}<em class="serif">{c.useH2Em}</em></span></h2>
+      <div class="grid-4">
+        {c.uses.map((u, i) => (
+          <div class="card use"><span class="use-no">0{i + 1}</span><h3>{u[0]}</h3><p class="muted" style="margin:0">{u[1]}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="dark pre-product">
+    <div class="wrap">
+      <p class="eyebrow">{c.preEyebrow}</p>
+      <h2><span class="big">{c.preH2}<em class="serif">{c.preH2Em}</em></span></h2>
+      <div class="pre-split">
+        <div class="pre-text">
+          <p class="lead">{c.preLead}</p>
+          <p><a class="btn" href={lp(lang, '/contact/')}>{T.getQuote}</a></p>
+        </div>
+        <ol class="pre-list">
+          {c.pre.map((u) => (
+            <li><strong>{u[0]}</strong><span>{u[1]}</span></li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="wrap">
       <p class="eyebrow">{c.makeEyebrow}</p>

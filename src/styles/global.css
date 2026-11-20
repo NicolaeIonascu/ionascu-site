@@ -744,6 +744,25 @@ section h2:first-child, section .prose > h2:first-child { margin-top: 0; }
 /* the long words in the three comparison cards ("Many pages", "Multe pagini", "Много страниц") stay on one line */
 html[lang='ro'] .compare .big, html[lang='ru'] .compare .big { font-size: clamp(1.4rem, 2.5vw, 2.3rem); white-space: nowrap; }
 .compare .cmp-text p { white-space: pre-line; } /* a line break (\n) in the card text is kept */
+/* "One animation, four jobs" strip right under the first banner */
+.uses .use-no { display: block; font-weight: 700; font-size: .85rem; letter-spacing: .2em; color: var(--accent); margin-bottom: .6rem; }
+.uses .use h3 { font-size: 1.05rem; margin-bottom: .5rem; }
+/* "No product yet? Show it anyway." : dark band, text on the left, a plain numbered list on the right (no cards) */
+.pre-product .lead { margin-top: 1rem; max-width: 34rem; color: rgb(255 255 255 / .82); }
+/* same size as the other section headings: only the colours change on the dark band */
+.dark.pre-product h2, .dark.pre-product h2 .big { color: #fff; }
+.pre-text > p:last-child { margin-top: 2.6rem; }
+.dark.pre-product h2 em.serif { color: #ffb162; white-space: nowrap; display: block; } /* "Покажите его." always on its own second row */
+.pre-product .pre-split { margin-top: 2.5rem; align-items: start; }
+.pre-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.pre-list { list-style: none; margin: 0; padding: 0; counter-reset: pre; }
+.pre-list li { counter-increment: pre; display: grid; grid-template-columns: 3.2rem 1fr; column-gap: 1rem; padding: 1.3rem 0; border-top: 1px solid rgb(255 255 255 / .22); }
+.pre-list li:last-child { border-bottom: 1px solid rgb(255 255 255 / .22); }
+.pre-list li::before { content: counter(pre, decimal-leading-zero); grid-row: 1 / span 2; font-size: 1.7rem; font-weight: 700; line-height: 1; color: #ffb162; }
+.pre-list strong { display: block; font-size: 1.05rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .35rem; }
+.pre-list span { color: rgb(255 255 255 / .78); line-height: 1.55; }
+@media (max-width: 860px) { .pre-split { grid-template-columns: 1fr; } }
+.hero-copy h1 .big em.serif { white-space: nowrap; } /* the accent words ("в анимации.") never split across two lines */
 .hero-copy .lead { text-wrap: balance; } /* no single word left alone on the last line */
 .compare a.card { display: block; color: inherit; text-decoration: none; cursor: pointer; }
 .nav .lang-group { display: inline-flex; gap: .25rem; }

@@ -113,9 +113,9 @@ function Make-Portfolio($suffix,$title,$sub){
   $g.Dispose(); Save-Jpg $bmp (Join-Path $out "portfolio$suffix.jpg"); $bmp.Dispose()
 }
 
-Make-Home '' 'YOUR MANUAL,' 'ANIMATED.' '3D assembly & installation instruction videos' "for manufacturers  $dot  ionascu.com"
-Make-Home '-ro' 'MANUALUL DVS.,' 'ANIMAT.' 'Videoclipuri 3D cu instrucțiuni de asamblare și instalare' "pentru producători  $dot  ionascu.com"
-Make-Home '-ru' 'ВАША ИНСТРУКЦИЯ,' 'В АНИМАЦИИ.' '3D-видеоинструкции по сборке и монтажу' "для производителей  $dot  ionascu.com"
+Make-Home '' 'YOUR PRODUCT,' 'ANIMATED.' '3D assembly & installation instruction videos' "for manufacturers  $dot  ionascu.com"
+Make-Home '-ro' 'PRODUSUL DVS.,' 'ANIMAT.' 'Videoclipuri 3D cu instrucțiuni de asamblare și instalare' "pentru producători  $dot  ionascu.com"
+Make-Home '-ru' 'ВАШ ПРОДУКТ,' 'В АНИМАЦИИ.' '3D-видеоинструкции по сборке и монтажу' "для производителей  $dot  ionascu.com"
 Make-Portfolio '-ru' 'ПОРТФОЛИО' "3D-анимации сборки и монтажа  $dot  ionascu.com"
 Make-Portfolio '' 'PORTFOLIO' "3D assembly & installation animations  $dot  ionascu.com"
 Make-Portfolio '-ro' 'PORTOFOLIU' "Animații 3D de asamblare și instalare  $dot  ionascu.com"
